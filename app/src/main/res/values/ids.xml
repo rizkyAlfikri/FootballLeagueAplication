@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="txt_name" type="id" />
+    <item name="img_photo" type="id" />
+    <item name="rv_legue" type="id" />
+    <item name="toolbar1" type="id" />
+    <item name="txt_desc" type="id" />
+</resources>
