@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_home_black_24dp"
+        android:title="@string/title_home" />
+
+    <item
+        android:id="@+id/navigation_competitions"
+        android:icon="@drawable/ic_trophy_cup_silhouette"
+        android:title="@string/competitions" />
+
+    <item
+        android:id="@+id/navigation_favorites"
+        android:icon="@drawable/ic_favorite_black_24dp"
+        android:title="@string/favorites" />
+
+    <item
+        android:id="@+id/navigation_teams"
+        android:icon="@drawable/ic_football_club"
+        android:title="@string/teams" />
+
+    <item
+        android:id="@+id/navigation_league"
+        android:icon="@drawable/ic_more_horiz_black_24dp"
+        android:title="@string/league" />
+
+</menu>
