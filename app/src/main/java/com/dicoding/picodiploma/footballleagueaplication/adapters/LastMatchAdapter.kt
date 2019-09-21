@@ -8,7 +8,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.dicoding.picodiploma.footballleagueaplication.R
 import com.dicoding.picodiploma.footballleagueaplication.models.last.LastMatchItem
-import com.dicoding.picodiploma.footballleagueaplication.models.teamDetail.Team
 import com.dicoding.picodiploma.footballleagueaplication.utils.dateGMTFormat
 import com.dicoding.picodiploma.footballleagueaplication.utils.timeGMTFormat
 import kotlinx.android.extensions.LayoutContainer
@@ -17,7 +16,8 @@ import kotlinx.android.synthetic.main.item_match.*
 class LastMatchAdapter(
     private val listData: List<LastMatchItem>,
     private val listHome: MutableList<String>,
-    private val listAway: MutableList<String>) : RecyclerView.Adapter<LastViewHolder>() {
+    private val listAway: MutableList<String>,
+    private val listener: (LastMatchItem) -> Unit) : RecyclerView.Adapter<LastViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LastViewHolder {
@@ -30,14 +30,14 @@ class LastMatchAdapter(
     }
 
     override fun onBindViewHolder(holder: LastViewHolder, position: Int) {
-        holder.bindData(listData[position], listHome[position], listAway[position])
+        holder.bindData(listData[position], listHome[position], listAway[position], listener)
     }
 
 }
 
 class LastViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
 
-    fun bindData(listData: LastMatchItem, urlBadgeHome: String, urlBadgeAway: String) {
+    fun bindData(listData: LastMatchItem, urlBadgeHome: String, urlBadgeAway: String, listener: (LastMatchItem) -> Unit) {
         listData.apply {
             txt_home.text = strHomeTeam
             txt_away.text = strAwayTeam
@@ -46,6 +46,8 @@ class LastViewHolder(override val containerView: View) : RecyclerView.ViewHolder
             txt_date.text = dateGMTFormat(dateEvent)
             txt_time.text = timeGMTFormat(strTime)
         }
+
+        containerView.setOnClickListener { listener(listData) }
 
 
         Glide.with(itemView).load(urlBadgeHome).apply { RequestOptions() }.into(img_home)

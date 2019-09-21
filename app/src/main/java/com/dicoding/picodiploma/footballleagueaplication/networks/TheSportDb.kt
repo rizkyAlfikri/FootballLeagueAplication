@@ -5,6 +5,15 @@ import com.dicoding.picodiploma.footballleagueaplication.BuildConfig
 
 object TheSportDb {
 
+    fun getDetailLeague(idLeague: String?): String {
+        return Uri.parse(BuildConfig.BASE_URL)
+            .buildUpon()
+            .appendPath("lookupleague.php")
+            .appendQueryParameter("id", idLeague)
+            .build()
+            .toString()
+    }
+
     fun getLastMatch(idLeague: String?): String {
         return Uri.parse(BuildConfig.BASE_URL)
             .buildUpon()

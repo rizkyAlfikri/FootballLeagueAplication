@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.dicoding.picodiploma.footballleagueaplication.DetailMatchActivity
 
 import com.dicoding.picodiploma.footballleagueaplication.R
 import com.dicoding.picodiploma.footballleagueaplication.adapters.LastMatchAdapter
@@ -16,6 +17,7 @@ import com.dicoding.picodiploma.footballleagueaplication.utils.invisible
 import com.dicoding.picodiploma.footballleagueaplication.utils.visible
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_last_match.*
+import org.jetbrains.anko.support.v4.startActivity
 import org.jetbrains.anko.support.v4.toast
 
 class LastMatchFragment(private val idLeague: String): Fragment(), LastMatchView {
@@ -42,7 +44,9 @@ class LastMatchFragment(private val idLeague: String): Fragment(), LastMatchView
         lastPresenter.getLastMatchData(idLeague)
 
 
-        lastAdapter = LastMatchAdapter(listData, listBadgeHome, listBadgeAway)
+        lastAdapter = LastMatchAdapter(listData, listBadgeHome, listBadgeAway){
+            startActivity<DetailMatchActivity>()
+        }
         rv_last_match.apply {
             layoutManager = LinearLayoutManager(context)
             setHasFixedSize(true)

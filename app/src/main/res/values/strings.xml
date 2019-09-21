@@ -5,6 +5,8 @@
     <string name="title_name">English Premier League</string>
     <string name="tab_text_1">Last Match</string>
     <string name="tab_text_2">Next Match</string>
+    <string name="match_events">Match Events</string>
+    <string name="lineups">Line-ups</string>
 
 
     <string name="overview">The Premier League (often referred to as the English Premier League (EPL) outside England), is the top
@@ -269,6 +271,7 @@
         <item>@drawable/scotish_premier_league</item>
         <item>@drawable/english_league_1</item>
     </array>
+
     <string name="title_activity_main_league">MainLeagueActivity</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
@@ -283,4 +286,23 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="colon">:</string>
+    <string name="image_banner">Image Banner</string>
+    <string name="league_name">League Name :</string>
+    <string name="league_detail">League Detail</string>
+    <string name="formed_year">Formed Year :</string>
+    <string name="date_first_event">Date First Event :</string>
+    <string name="country">Country :</string>
+    <string name="description">Description :</string>
+    <string name="website">Website :</string>
+    <string name="facebook">Facebook :</string>
+    <string name="twiter">Twiter :</string>
+    <string name="youtube">Youtube :</string>
+    <string name="title_activity_detail_match">DetailMatchActivity</string>
+    <string name="homeposter">homePoster</string>
+    <string name="awayposter">awayPoster</string>
+    <string name="match_events">Match Events</string>
+    <string name="formations">Formations</string>
+    <string name="shoots">Shoots</string>
+    <string name="red_cards">Red Cards</string>
+    <string name="yellow_cards">Yellow Cards</string>
 </resources>

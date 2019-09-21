@@ -43,7 +43,6 @@ class LastMatchPresenter(
                 listAway.add(dataAway.teams[0].strTeamBadge)
             }
 
-
             uiThread {
                 view.hideLoading()
                 try {

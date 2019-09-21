@@ -1,92 +1,93 @@
-package com.dicoding.picodiploma.footballleagueaplication.models
+package com.dicoding.picodiploma.footballleagueaplication.models.leagueDetail
+
 
 import com.google.gson.annotations.SerializedName
 
-data class LeagueDetailItem(
+data class League(
     @SerializedName("dateFirstEvent")
-    val dateFirstEvent: String,
+    var dateFirstEvent: String,
     @SerializedName("idCup")
-    val idCup: String,
+    var idCup: String,
     @SerializedName("idLeague")
-    val idLeague: String,
+    var idLeague: String,
     @SerializedName("idSoccerXML")
-    val idSoccerXML: String,
+    var idSoccerXML: String,
     @SerializedName("intFormedYear")
-    val intFormedYear: String,
+    var intFormedYear: String,
     @SerializedName("strBadge")
-    val strBadge: String,
+    var strBadge: String,
     @SerializedName("strBanner")
-    val strBanner: String,
+    var strBanner: String,
     @SerializedName("strComplete")
-    val strComplete: String,
+    var strComplete: String,
     @SerializedName("strCountry")
-    val strCountry: String,
+    var strCountry: String,
     @SerializedName("strDescriptionCN")
-    val strDescriptionCN: String,
+    var strDescriptionCN: Any?,
     @SerializedName("strDescriptionDE")
-    val strDescriptionDE: String,
+    var strDescriptionDE: Any?,
     @SerializedName("strDescriptionEN")
-    val strDescriptionEN: String,
+    var strDescriptionEN: String,
     @SerializedName("strDescriptionES")
-    val strDescriptionES: String,
+    var strDescriptionES: Any?,
     @SerializedName("strDescriptionFR")
-    val strDescriptionFR: String,
+    var strDescriptionFR: String,
     @SerializedName("strDescriptionHU")
-    val strDescriptionHU: String,
+    var strDescriptionHU: Any?,
     @SerializedName("strDescriptionIL")
-    val strDescriptionIL: String,
+    var strDescriptionIL: Any?,
     @SerializedName("strDescriptionIT")
-    val strDescriptionIT: String,
+    var strDescriptionIT: Any?,
     @SerializedName("strDescriptionJP")
-    val strDescriptionJP: String,
+    var strDescriptionJP: Any?,
     @SerializedName("strDescriptionNL")
-    val strDescriptionNL: String,
+    var strDescriptionNL: Any?,
     @SerializedName("strDescriptionNO")
-    val strDescriptionNO: String,
+    var strDescriptionNO: Any?,
     @SerializedName("strDescriptionPL")
-    val strDescriptionPL: String,
+    var strDescriptionPL: Any?,
     @SerializedName("strDescriptionPT")
-    val strDescriptionPT: String,
+    var strDescriptionPT: Any?,
     @SerializedName("strDescriptionRU")
-    val strDescriptionRU: String,
+    var strDescriptionRU: Any?,
     @SerializedName("strDescriptionSE")
-    val strDescriptionSE: String,
+    var strDescriptionSE: Any?,
     @SerializedName("strDivision")
-    val strDivision: String,
+    var strDivision: String,
     @SerializedName("strFacebook")
-    val strFacebook: String,
+    var strFacebook: String,
     @SerializedName("strFanart1")
-    val strFanart1: String,
+    var strFanart1: String,
     @SerializedName("strFanart2")
-    val strFanart2: String,
+    var strFanart2: String,
     @SerializedName("strFanart3")
-    val strFanart3: String,
+    var strFanart3: String,
     @SerializedName("strFanart4")
-    val strFanart4: String,
+    var strFanart4: String,
     @SerializedName("strGender")
-    val strGender: String,
+    var strGender: String,
     @SerializedName("strLeague")
-    val strLeague: String,
+    var strLeague: String,
     @SerializedName("strLeagueAlternate")
-    val strLeagueAlternate: String,
+    var strLeagueAlternate: String,
     @SerializedName("strLocked")
-    val strLocked: String,
+    var strLocked: String,
     @SerializedName("strLogo")
-    val strLogo: String,
+    var strLogo: String,
     @SerializedName("strNaming")
-    val strNaming: String,
+    var strNaming: String,
     @SerializedName("strPoster")
-    val strPoster: String,
+    var strPoster: String,
     @SerializedName("strRSS")
-    val strRSS: String,
+    var strRSS: String,
     @SerializedName("strSport")
-    val strSport: String,
+    var strSport: String,
     @SerializedName("strTrophy")
-    val strTrophy: String,
+    var strTrophy: String,
     @SerializedName("strTwitter")
-    val strTwitter: String,
+    var strTwitter: String,
     @SerializedName("strWebsite")
-    val strWebsite: String,
+    var strWebsite: String,
     @SerializedName("strYoutube")
-    val strYoutube: String
+    var strYoutube: String
 )

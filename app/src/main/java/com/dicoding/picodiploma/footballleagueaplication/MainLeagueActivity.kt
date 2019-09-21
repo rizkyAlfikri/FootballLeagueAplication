@@ -25,7 +25,7 @@ class MainLeagueActivity : AppCompatActivity() {
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
             R.id.navigation_home -> {
-                fragment = HomeFragment()
+                fragment = HomeFragment(leagueModel.leagueId)
                 supportFragmentManager.beginTransaction()
                     .replace(frame_container.id, fragment, fragment.javaClass.simpleName).commit()
                 return@OnNavigationItemSelectedListener true
@@ -62,7 +62,7 @@ class MainLeagueActivity : AppCompatActivity() {
 
         leagueModel = intent.getParcelableExtra(EXTRA_ID_LEAGUE)
 
-        fragment = HomeFragment()
+        fragment = HomeFragment(leagueModel.leagueId)
         supportFragmentManager.beginTransaction()
             .replace(frame_container.id, fragment, fragment.javaClass.simpleName).commit()
 

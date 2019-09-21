@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <RelativeLayout
+    android:background="@android:color/white"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/txt_match"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="@string/match_events"
+            android:textColor="@color/primary_text"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <View
+            android:id="@+id/view1"
+            style="@style/AppTheme.view"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_below="@+id/txt_match"
+            app:layout_constraintTop_toBottomOf="@+id/txt_match" />
+
+
+        <TextView
+            android:id="@+id/txt_formation_home"
+            style="@style/AppTheme.TextDetailMatch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_below="@id/view1"
+            tools:text="5-4-2" />
+
+        <TextView
+            android:id="@+id/txt_formation_away"
+            style="@style/AppTheme.TextDetailMatch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/view1"
+            tools:text="4-4-2" />
+
+        <TextView
+            style="@style/AppTheme.TextDetailMatch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/formations"
+            android:textSize="16sp"
+            android:textColor="@color/secondary_text"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/view1"/>
+
+        <View
+            android:id="@+id/view2"
+            style="@style/AppTheme.view"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_below="@id/txt_formation_home"/>
+
+        <TextView
+            android:id="@+id/txt_shot_home"
+            style="@style/AppTheme.TextDetailMatch"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_below="@id/view2"
+            tools:text="2" />
+
+        <TextView
+            android:id="@+id/txt_shot_away"
+            style="@style/AppTheme.TextDetailMatch"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_below="@id/view2"
+            android:layout_alignParentEnd="true"
+            tools:text="3" />
+
+        <TextView
+            android:id="@+id/textView"
+            style="@style/AppTheme.TextDetailMatch"
+            android:layout_marginTop="16dp"
+            android:text="@string/shoots"
+            android:textSize="16sp"
+            android:textColor="@color/secondary_text"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/view2"/>
+
+        <View
+            android:id="@+id/view3"
+            style="@style/AppTheme.view"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_below="@id/txt_shot_home"/>
+
+        <TextView
+            android:id="@+id/txt_red_home"
+            style="@style/AppTheme.TextDetailMatch"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:textSize="14sp"
+            android:layout_below="@id/view3"
+            tools:text="49': Martin Skrtel" />
+
+        <TextView
+            android:id="@+id/txt_red_away"
+            style="@style/AppTheme.TextDetailMatch"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:textSize="14sp"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@id/view3"
+            android:layout_above="@id/view4"
+            tools:text="49': Martin Skrtel" />
+
+        <TextView
+            android:id="@+id/textView2"
+            style="@style/AppTheme.TextDetailMatch"
+            android:layout_marginTop="16dp"
+            android:text="@string/red_cards"
+            android:textSize="16sp"
+            android:textColor="@color/secondary_text"
+            android:layout_below="@id/view3"
+            android:layout_centerHorizontal="true"/>
+
+        <View
+            android:id="@+id/view4"
+            style="@style/AppTheme.view"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_below="@id/txt_red_home"/>
+
+        <TextView
+            android:id="@+id/txt_yellow_home"
+            style="@style/AppTheme.TextDetailMatch"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:textSize="14sp"
+            android:layout_marginBottom="16dp"
+            android:layout_below="@id/view4"
+            tools:text="49': Martin Skrtel" />
+
+        <TextView
+            android:id="@+id/txt_yellow_away"
+            style="@style/AppTheme.TextDetailMatch"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:textSize="14sp"
+            android:layout_marginBottom="16dp"
+            android:layout_below="@id/view4"
+            android:layout_alignParentEnd="true"
+            tools:text="49': Martin Skrtel" />
+
+        <TextView
+            android:id="@+id/textView3"
+            style="@style/AppTheme.TextDetailMatch"
+            android:layout_marginTop="16dp"
+            android:text="@string/yellow_cards"
+            android:textSize="16sp"
+            android:textColor="@color/secondary_text"
+            android:layout_below="@id/view4"
+            android:layout_centerHorizontal="true"
+            app:layout_constraintTop_toBottomOf="@+id/view4" />
+
+
+
+    </RelativeLayout>
+
