@@ -5,19 +5,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.nextMatchFragment.NextMatchFragment">
+    tools:context=".features.nextMatch.NextMatchFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_next_match"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="96dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:listitem="@layout/item_match" />
+        tools:listitem="@layout/item_match"
+        tools:ignore="UnusedAttribute" />
 
     <ProgressBar
         android:id="@+id/progress_bar"

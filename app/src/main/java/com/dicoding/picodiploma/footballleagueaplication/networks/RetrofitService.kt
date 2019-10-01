@@ -1,19 +1,18 @@
 package com.dicoding.picodiploma.footballleagueaplication.networks
 
 import com.dicoding.picodiploma.footballleagueaplication.BuildConfig
+import com.google.gson.GsonBuilder
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitService {
 
-    private var retrofit: Retrofit? = null
-    fun <S>createService(serviceClass: Class<S>):S? {
-        if (retrofit == null) {
-            retrofit = Retrofit.Builder()
-                .baseUrl(BuildConfig.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-        }
-        return retrofit?.create(serviceClass)
-    }
+    fun createService(): ApiService = Retrofit.Builder()
+        .baseUrl(BuildConfig.BASE_URL)
+        .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+        .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
+        .build()
+        .create(ApiService::class.java)
+
 }

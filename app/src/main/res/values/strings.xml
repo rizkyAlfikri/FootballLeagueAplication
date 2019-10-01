@@ -7,6 +7,9 @@
     <string name="tab_text_2">Next Match</string>
     <string name="match_events">Match Events</string>
     <string name="lineups">Line-ups</string>
+    <string name="overviews">Overview</string>
+    <string name="schedule">Schedule</string>
+    <string name="Players">Players</string>
 
 
     <string name="overview">The Premier League (often referred to as the English Premier League (EPL) outside England), is the top
@@ -300,9 +303,19 @@
     <string name="title_activity_detail_match">DetailMatchActivity</string>
     <string name="homeposter">homePoster</string>
     <string name="awayposter">awayPoster</string>
-    <string name="match_events">Match Events</string>
     <string name="formations">Formations</string>
     <string name="shoots">Shoots</string>
     <string name="red_cards">Red Cards</string>
     <string name="yellow_cards">Yellow Cards</string>
+    <string name="goalkeeper">Goalkeeper</string>
+    <string name="lines_up">Lines Up</string>
+    <string name="defenses">Defenses</string>
+    <string name="midfields">Midfields</string>
+    <string name="forwards">Forwards</string>
+    <string name="subtitutes">Subtitutes</string>
+    <string name="no_data">No Data</string>
+    <string name="search_matchs">Search Matchs</string>
+    <string name="settings">Settings</string>
+    <string name="favorite">Favorite</string>
+    <string name="team_badge">Team Badge</string>
 </resources>

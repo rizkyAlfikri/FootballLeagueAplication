@@ -7,11 +7,14 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:elevation="4dp"
     android:layout_marginBottom="56dp"
+    android:clickable="true"
+    android:elevation="4dp"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".fragments.home_fragment.HomeFragment">
+    tools:context=".features.home.HomeFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -63,10 +66,16 @@
             android:layout_height="1dp"
             android:background="@android:color/darker_gray" />
 
+
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -83,7 +92,8 @@
                     android:layout_marginBottom="16dp"
                     android:text="@string/league_detail"
                     android:textColor="@color/primary_text"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -167,13 +177,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:lineSpacingExtra="4dp"
-                    app:trimLength="150"
-                    app:colorClickableText="@color/colorPrimary"
-                    app:trimExpandedText="Show more"
-                    app:trimCollapsedText="Show less"
-                    app:trimMode="trimModeLength"
                     android:textColor="@color/secondary_text"
                     android:textSize="16sp"
+                    app:colorClickableText="@color/colorPrimary"
+                    app:trimCollapsedText="Show less"
+                    app:trimExpandedText="Show more"
+                    app:trimLength="150"
+                    app:trimMode="trimModeLength"
                     tools:text="@string/overview" />
 
                 <TextView

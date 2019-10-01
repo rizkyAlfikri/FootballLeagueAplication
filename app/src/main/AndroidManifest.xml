@@ -13,12 +13,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".features.teamDetail.TeamDetailActivity"></activity>
+        <activity android:name=".features.searchMatch.SearchMatchActivity" />
         <activity
-            android:name=".DetailMatchActivity"
+            android:name=".features.detailMatch.DetailMatchActivity"
             android:label="@string/title_activity_detail_match"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".MainLeagueActivity"
+            android:name=".activities.MainLeagueActivity"
             android:label="@string/title_activity_main_league" />
         <activity android:name=".activities.DetailActivity" />
         <activity android:name=".activities.MainActivity">

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_marginTop="16dp"
+    android:layout_marginBottom="8dp"
+    app:cardCornerRadius="12dp"
+    android:layout_marginLeft="12dp"
+    android:layout_marginRight="12dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    app:layout_constraintCircleRadius="12dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/img_home"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription"
+            tools:src="@drawable/english_premier_league" />
+
+        <ImageView
+            android:id="@+id/img_away"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription"
+            tools:src="@drawable/english_premier_league" />
+
+        <TextView
+            android:id="@+id/txt_home"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:textAlignment="center"
+            android:textColor="@color/primary_text"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/img_home"
+            app:layout_constraintStart_toStartOf="@+id/img_home"
+            app:layout_constraintTop_toBottomOf="@+id/img_home"
+            tools:text="@string/title_name" />
+
+        <TextView
+            android:id="@+id/txt_away"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+            android:textAlignment="center"
+            android:textColor="@color/primary_text"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/img_away"
+            app:layout_constraintStart_toStartOf="@+id/img_away"
+            app:layout_constraintTop_toBottomOf="@+id/img_away"
+            tools:text="@string/title_name" />
+
+        <TextView
+            android:id="@+id/txt_score_home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:textColor="@color/primary_text"
+            android:textSize="28sp"
+            app:layout_constraintBottom_toBottomOf="@+id/txt_colon"
+            app:layout_constraintEnd_toStartOf="@+id/txt_colon"
+            app:layout_constraintStart_toEndOf="@+id/img_home"
+            app:layout_constraintTop_toTopOf="@+id/txt_colon"
+            tools:text="1" />
+
+        <TextView
+            android:id="@+id/txt_score_away"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:textColor="@color/primary_text"
+            android:textSize="28sp"
+            app:layout_constraintBottom_toBottomOf="@+id/txt_colon"
+            app:layout_constraintEnd_toStartOf="@+id/img_away"
+            app:layout_constraintStart_toEndOf="@+id/txt_colon"
+            app:layout_constraintTop_toTopOf="@+id/txt_colon"
+            tools:text="2" />
+
+        <TextView
+            android:id="@+id/txt_colon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="@string/colon"
+            android:textColor="@color/primary_text"
+            android:textSize="28sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/img_away"
+            app:layout_constraintStart_toEndOf="@+id/img_home"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/txt_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:textColor="@color/primary_text"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="12 September 2019" />
+
+        <TextView
+            android:id="@+id/txt_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/primary_text"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/txt_date"
+            app:layout_constraintStart_toStartOf="@+id/txt_date"
+            app:layout_constraintTop_toBottomOf="@+id/txt_date"
+            tools:text="17:00" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>
+

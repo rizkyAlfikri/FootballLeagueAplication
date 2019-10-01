@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:elevation="4dp"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:fitsSystemWindows="true"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:titleEnabled="false"
+            android:fitsSystemWindows="true"
+            app:expandedTitleTextAppearance="@style/AppTheme.expand"
+            app:contentScrim="@color/bgapps"
+            app:statusBarScrim="@android:color/transparent"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
+
+            <RelativeLayout
+                android:id="@+id/relative_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
+                <ImageView
+                    android:id="@+id/img_team"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="64dp"
+                    tools:src="@drawable/english_premier_league"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:id="@+id/txt_team"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Primary League"
+                    android:textSize="18sp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="8dp"
+                    android:layout_below="@id/img_team"
+                    android:textColor="@color/primary_text"/>
+
+                <ImageView
+                    android:id="@+id/img_web"
+                    android:layout_width="32dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_height="32dp"
+                    android:layout_toStartOf="@id/img_facebook"
+                    android:layout_marginEnd="16dp"
+                    android:layout_below="@id/txt_team"
+                    android:src="@drawable/world"
+                    tools:ignore="ContentDescription" />
+
+                <ImageView
+                    android:id="@+id/img_facebook"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_below="@+id/txt_team"
+                    android:layout_toStartOf="@id/dummy_view"
+                    android:src="@drawable/facebook"
+                    tools:ignore="ContentDescription" />
+
+                <View
+                    android:id="@+id/dummy_view"
+                    android:layout_width="0dp"
+                    android:layout_below="@id/txt_team"
+                    android:layout_marginTop="16dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="0dp" />
+
+                <ImageView
+                    android:id="@+id/img_twitter"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/twitter"
+                    android:layout_below="@id/txt_team"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_toEndOf="@id/dummy_view"
+                    tools:ignore="ContentDescription" />
+
+                <ImageView
+                    android:id="@+id/img_instagram"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/instagram"
+                    android:layout_below="@id/txt_team"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_toEndOf="@id/img_twitter"
+                    tools:ignore="ContentDescription" />
+
+                <ProgressBar
+                    android:id="@+id/progress_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"/>
+            </RelativeLayout>
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="96dp"
+                android:minWidth="?attr/actionBarSize"
+                android:gravity="top"
+                app:layout_collapseMode="pin"
+                app:title="@string/app_name"
+                app:popupTheme="@style/AppTheme.PopupOverlay"
+                app:titleMarginTop="15dp"/>
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tab_layout"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_gravity="bottom"/>
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+        
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"/>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

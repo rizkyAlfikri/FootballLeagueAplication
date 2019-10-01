@@ -1,30 +1,26 @@
 package com.dicoding.picodiploma.footballleagueaplication.networks
 
-import com.dicoding.picodiploma.footballleagueaplication.models.last.LastMatchResponse
-import com.dicoding.picodiploma.footballleagueaplication.models.teamDetail.TeamDetailResponse
-import retrofit2.Call
+import com.dicoding.picodiploma.footballleagueaplication.models.lastMatchModel.LastMatchResponse
+import com.dicoding.picodiploma.footballleagueaplication.models.nextMatchModel.NextMatchResponse
+import com.dicoding.picodiploma.footballleagueaplication.models.teamDetailModel.TeamDetailResponse
+import com.dicoding.picodiploma.footballleagueaplication.models.teamModel.TeamResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
-
-
+import rx.Observable
 
 interface ApiService {
 
-//    @GET("lookupleague.php")
-//    fun getDetailLeague(@Query("id") idLeague: String): Call<LeagueResponse>
-//
-//    @GET("eventsnextleague.php")
-//    fun getNextMatch(@Query("id") idLeague: String): Call<LeagueResponse>
-//
-//    @GET("eventspastleague.php")
-//    fun getLastLeague(@Query("id") idLeague: String?): Call<LastMatchResponse>
-//
-//    @GET("lookupevent.php")
-//    fun getDetailMatch(@Query("id") idLeague: String): Call<LeagueResponse>
-//
-//    @GET("searchevents.php")
-//    fun getSearchMatch(@Query("e") teamsName: String): Call<LeagueResponse>
-//
-//    @GET("lookupteam.php")
-//    fun getDetailTeam(@Query("id") idTeam: String?): Call<TeamDetailResponse>
+ @GET("lookup_all_teams.php")
+ fun getTeamFromServer(@Query("id") idLeague: String?): Observable<TeamResponse>
+
+ @GET("lookupteam.php")
+ fun getTeamDetailFromServer(@Query("id") idTeam: String?): Observable<TeamDetailResponse>
+
+ @GET("eventspastleague.php")
+ fun getLastMatch(@Query("id") idLeague: String?): Observable<LastMatchResponse>
+
+ @GET("eventsnextleague.php")
+ fun getNextMatch(@Query("id") idLeague: String?): Observable<NextMatchResponse>
+
+
 }

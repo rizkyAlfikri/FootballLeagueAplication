@@ -5,8 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.dicoding.picodiploma.footballleagueaplication.MainLeagueActivity
-import com.dicoding.picodiploma.footballleagueaplication.MainLeagueActivity.Companion.EXTRA_ID_LEAGUE
+import com.dicoding.picodiploma.footballleagueaplication.activities.MainLeagueActivity.Companion.EXTRA_ID_LEAGUE
 import com.dicoding.picodiploma.footballleagueaplication.R
 import com.dicoding.picodiploma.footballleagueaplication.R.array.*
 import com.dicoding.picodiploma.footballleagueaplication.adapters.LeagueAdapter

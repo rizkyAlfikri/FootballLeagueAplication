@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_marginTop="8dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    tools:ignore="UnusedAttribute">
+
+    <TextView
+        android:id="@+id/txt_lineUp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:text="@string/lines_up"
+        android:textColor="@color/primary_text"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+
+    <View
+        android:id="@+id/view1"
+        style="@style/AppTheme.view"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/txt_match" />
+
+    <RelativeLayout
+        android:id="@+id/relative1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/txt_goalkepers_home"
+            style="@style/AppTheme.TextDetailMatch.Team"
+            android:textAlignment="viewStart"
+            android:layout_alignParentStart="true"
+            android:textStyle="normal"
+            tools:text="Simon Mignolet" />
+
+        <TextView
+            android:id="@+id/txt_goalkepers_away"
+            style="@style/AppTheme.TextDetailMatch.Team"
+            android:layout_alignParentEnd="true"
+            android:textAlignment="viewEnd"
+            android:textStyle="normal"
+            tools:text="Simon Mignolet" />
+
+        <TextView
+            android:id="@+id/text_goalkeper"
+            style="@style/AppTheme.TextDetailMatch"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:text="@string/goalkeeper"
+            android:textColor="@color/secondary_text"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+
+    <View
+        android:id="@+id/view2"
+        style="@style/AppTheme.view"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp" />
+
+    <RelativeLayout
+        android:id="@+id/relative2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <TextView
+            android:id="@+id/txt_defense_home"
+            style="@style/AppTheme.TextDetailMatch.Team"
+            android:textAlignment="viewStart"
+            android:layout_alignParentStart="true"
+            android:textStyle="normal"
+            tools:text="Simon" />
+
+        <TextView
+            android:id="@+id/txt_defense_away"
+            style="@style/AppTheme.TextDetailMatch.Team"
+            android:layout_alignParentEnd="true"
+            android:textAlignment="viewEnd"
+            android:textStyle="normal"
+            tools:text="Simon" />
+
+        <TextView
+            android:id="@+id/text_defence"
+            style="@style/AppTheme.TextDetailMatch.Team"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:text="@string/defenses"
+            android:textColor="@color/secondary_text"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/view3"
+        style="@style/AppTheme.view"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/txt_midfield_home"
+            style="@style/AppTheme.TextDetailMatch.Team"
+            android:textAlignment="viewStart"
+            android:layout_alignParentStart="true"
+            android:textStyle="normal"
+            tools:text="Martin Skrtel" />
+
+        <TextView
+            android:id="@+id/txt_midfield_away"
+            style="@style/AppTheme.TextDetailMatch.Team"
+            android:layout_alignParentEnd="true"
+            android:textAlignment="viewEnd"
+            android:textStyle="normal"
+            tools:text="Jordan Henderson" />
+
+        <TextView
+            android:id="@+id/text_midfields"
+            style="@style/AppTheme.TextDetailMatch"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:text="@string/midfields"
+            android:textColor="@color/secondary_text"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/view4"
+        style="@style/AppTheme.view"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/txt_forward_home"
+            style="@style/AppTheme.TextDetailMatch.Team"
+            android:textAlignment="viewStart"
+            android:layout_alignParentStart="true"
+            android:textStyle="normal"
+            tools:text="49': Martin Skrtel" />
+
+        <TextView
+            android:id="@+id/txt_forward_away"
+            style="@style/AppTheme.TextDetailMatch.Team"
+            android:layout_alignParentEnd="true"
+            android:textAlignment="viewEnd"
+            android:textStyle="normal"
+            tools:text="49': Martin Skrtel" />
+
+        <TextView
+            android:id="@+id/text_forward"
+            style="@style/AppTheme.TextDetailMatch"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:text="@string/forwards"
+            android:textColor="@color/secondary_text"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/view5"
+        style="@style/AppTheme.view"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/txt_subtitutes_home"
+            style="@style/AppTheme.TextDetailMatch.Team"
+            android:textAlignment="viewStart"
+            android:layout_alignParentStart="true"
+            android:textStyle="normal"
+            tools:text="49': Martin Skrtel" />
+
+        <TextView
+            android:id="@+id/txt_subtitutes_away"
+            style="@style/AppTheme.TextDetailMatch.Team"
+            android:layout_alignParentEnd="true"
+            android:textAlignment="viewEnd"
+            android:textStyle="normal"
+            tools:text="49': Martin Skrtel" />
+
+        <TextView
+            android:id="@+id/text_subtitle"
+            style="@style/AppTheme.TextDetailMatch"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:text="@string/subtitutes"
+            android:textColor="@color/secondary_text"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
+
+</LinearLayout>
+
