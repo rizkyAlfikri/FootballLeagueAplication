@@ -10,13 +10,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.dicoding.picodiploma.footballleagueaplication.R
 import com.dicoding.picodiploma.footballleagueaplication.features.detailMatch.DetailMatchActivity
 import com.dicoding.picodiploma.footballleagueaplication.features.detailMatch.DetailMatchActivity.Companion.EXTRA_EVENT
-import com.dicoding.picodiploma.footballleagueaplication.features.lastMatch.LastMatchDateHolder
-import com.dicoding.picodiploma.footballleagueaplication.features.lastMatch.LastMatchHolder
-import com.dicoding.picodiploma.footballleagueaplication.features.nextMatch.NextMatchHolder
 import com.dicoding.picodiploma.footballleagueaplication.models.lastMatchModel.LastMatchItem
 import com.dicoding.picodiploma.footballleagueaplication.models.nextMatchModel.NextMatchItem
+import com.dicoding.picodiploma.footballleagueaplication.networks.ApiRepository
 import com.dicoding.picodiploma.footballleagueaplication.utils.invisible
 import com.dicoding.picodiploma.footballleagueaplication.utils.visible
+import com.google.gson.Gson
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.fragment_team_schedule.*
@@ -61,38 +60,68 @@ class TeamScheduleFragment : Fragment(), TeamScheduleView {
             adapter = scheduleAdapter
         }
 
-        val schedulePresenter = TeamSchedulePresenter(this)
-        schedulePresenter.getMatchData(idLeague, idTeam)
+        scheduleAdapter.clear()
+
+        val schedulePresenter = TeamSchedulePresenter(this, Gson(), ApiRepository())
+        schedulePresenter.getLastMatchData(idLeague, idTeam)
+        schedulePresenter.getNextMatchData(idLeague, idTeam)
 
     }
 
     override fun showLoading() {
-        progress_bar.visible()
+        progress_bar?.visible()
     }
 
     override fun hideLoading() {
-        progress_bar.invisible()
+        progress_bar?.invisible()
     }
 
-    override fun getScheduleData(listLastMatch: List<LastMatchItem>, listNextMatchItem: List<NextMatchItem>) {
-        listLastMatch.map { item ->
-            scheduleAdapter.add(LastMatchDateHolder(item.dateEvent))
-            scheduleAdapter.add(LastMatchHolder(item, "test", "test") {
-                startActivity<DetailMatchActivity>(EXTRA_EVENT to it.idEvent)
-            })
+    override fun loadLastTeam(
+        listLastMatch: MutableList<LastMatchItem>,
+        listLastBadgeHome: MutableList<String>,
+        listLastBadgeAway: MutableList<String>,
+        listLastStadiumHome: MutableList<String?>
+    ) {
 
-        }
+        for (position in listLastMatch.indices) {
 
-        listNextMatchItem.map { item ->
-            scheduleAdapter.add(LastMatchDateHolder(item.dateEvent))
-            scheduleAdapter.add(NextMatchHolder(item, "test", "test"){
-                startActivity<DetailMatchActivity>( EXTRA_EVENT to it.idEvent)
-            })
-
+            scheduleAdapter.add(
+                ScheduleHolder(
+                    listLastMatch[position],
+                    listLastBadgeHome[position],
+                    listLastBadgeAway[position],
+                    listLastStadiumHome[position]
+                ) {
+                    it as LastMatchItem
+                    startActivity<DetailMatchActivity>(EXTRA_EVENT to it.idEvent)
+                })
         }
     }
 
-    override fun onFailure(throwable: Throwable?) {
-        toast("${throwable?.localizedMessage}")
+
+    override fun loadNextTeam(
+        listNextMatch: MutableList<NextMatchItem>,
+        listNextBadgeHome: MutableList<String>,
+        listNextBadgeAway: MutableList<String>,
+        listNextStadiumHome: MutableList<String?>
+    ) {
+
+        for (position in listNextMatch.indices) {
+
+            scheduleAdapter.add(
+                ScheduleHolder(
+                    listNextMatch[position],
+                    listNextBadgeHome[position],
+                    listNextBadgeAway[position],
+                    listNextStadiumHome[position]
+                ) {
+                    it as NextMatchItem
+                    startActivity<DetailMatchActivity>(EXTRA_EVENT to it.idEvent)
+                })
+        }
+    }
+
+    override fun onFailure(throwable: Throwable) {
+        toast(throwable.localizedMessage)
     }
 }

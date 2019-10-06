@@ -6,19 +6,31 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.dicoding.picodiploma.footballleagueaplication.R
+import com.dicoding.picodiploma.footballleagueaplication.models.playerModel.PlayerItem
+import com.dicoding.picodiploma.footballleagueaplication.utils.invisible
+import com.dicoding.picodiploma.footballleagueaplication.utils.visible
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.ViewHolder
+import kotlinx.android.synthetic.main.fragment_team_players.*
+import org.jetbrains.anko.support.v4.toast
 
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class TeamPlayersFragment : Fragment(), TeamPlayerView {
 
-/**
- * A simple [Fragment] subclass.
- *
- */
-class TeamPlayersFragment : Fragment() {
+    private val playerAdapter = GroupAdapter<ViewHolder>()
+
+    companion object{
+        fun newInstance(idTeam: String): TeamPlayersFragment {
+            val fragment = TeamPlayersFragment()
+            fragment.arguments = Bundle().apply {
+                putString("id", idTeam)
+            }
+            return fragment
+        }
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,6 +38,45 @@ class TeamPlayersFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_team_players, container, false)
+    }
+
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        val idTeam = arguments?.getString("id")
+        rv_player.apply {
+            layoutManager = LinearLayoutManager(context)
+            setHasFixedSize(true)
+            adapter = playerAdapter
+        }
+
+        val playerPresenter = TeamPlayerPresenter(this)
+        playerPresenter.getPlayerFromServer(idTeam)
+    }
+
+    override fun showLoading() {
+        progress_bar?.visible()
+    }
+
+    override fun hideLoading() {
+        progress_bar?.invisible()
+    }
+
+    override fun loadPlayerToView(dataFormation: Set<String>, dataPlayer: List<PlayerItem>) {
+        playerAdapter.clear()
+
+        dataFormation.forEach { itPosition ->
+            playerAdapter.add(TeamPlayerTitleHolder(itPosition))
+            dataPlayer.forEach { itPlayer ->
+                if (itPosition == itPlayer.strPosition) {
+                    playerAdapter.add(TeamPlayerHolder(itPlayer))
+                }
+            }
+        }
+    }
+
+    override fun onFailure(throwable: Throwable) {
+        toast(throwable.localizedMessage)
     }
 
 

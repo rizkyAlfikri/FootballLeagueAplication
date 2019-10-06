@@ -9,7 +9,7 @@
     android:layout_height="match_parent"
     android:layout_marginBottom="56dp"
     android:clickable="true"
-    android:elevation="4dp"
+    android:elevation="12dp"
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
     android:orientation="vertical"
@@ -28,6 +28,7 @@
             android:fadingEdge="horizontal">
 
             <androidx.recyclerview.widget.RecyclerView
+                android:padding="8dp"
                 android:id="@+id/rv_league"
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
@@ -41,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center"
                 android:layout_marginBottom="8dp"
-                app:spi_dotSelectedColor="@color/colorPrimary"
+                app:spi_dotSelectedColor="@color/colorAccent"
                 app:spi_dotSelectedSize="14dp"
                 app:spi_dotSize="10dp" />
 
@@ -61,21 +62,11 @@
 
         </FrameLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/darker_gray" />
-
-
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@android:color/darker_gray" />
 
             <LinearLayout
                 android:layout_width="match_parent"

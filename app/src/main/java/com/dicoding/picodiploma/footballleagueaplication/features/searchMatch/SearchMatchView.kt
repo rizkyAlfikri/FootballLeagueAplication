@@ -5,6 +5,10 @@ import com.dicoding.picodiploma.footballleagueaplication.models.searchMatchModel
 interface SearchMatchView {
     fun showLoading()
     fun hideLoading()
-    fun loadDataToView(data: MutableList<SearchMatchItem>, dataHome: MutableList<String>, dataAway: MutableList<String>)
+    fun loadDataToView(
+        data: MutableList<SearchMatchItem>,
+        dataHome: MutableList<String>,
+        dataAway: MutableList<String>,
+        dataStadium: MutableList<String?>)
     fun onFailure(throwable: Throwable)
 }

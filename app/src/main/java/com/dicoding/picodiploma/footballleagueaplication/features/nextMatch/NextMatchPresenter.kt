@@ -19,6 +19,7 @@ class NextMatchPresenter(
     fun getNextMatchData(idLeague: String?) {
         val listHome = mutableListOf<String>()
         val listAway = mutableListOf<String>()
+        val listStadium = mutableListOf<String?>()
         val setDate = mutableSetOf<String>()
 
         view.showLoading()
@@ -34,7 +35,7 @@ class NextMatchPresenter(
             val position = data.events.size
             listHome.clear()
             listAway.clear()
-            setDate.clear()
+            listStadium.clear()
 
             repeat(position) {
 
@@ -52,17 +53,20 @@ class NextMatchPresenter(
 
                 listHome.add(dataHome.teams[0].strTeamBadge)
                 listAway.add(dataAway.teams[0].strTeamBadge)
-
-                setDate.add(data.events[it].dateEvent)
+                listStadium.add(dataHome.teams[0].strStadium)
             }
 
-
+            // get date event from server and put them to Set collection
+            setDate.clear()
+            data.events.map {
+                setDate.add(it.dateEvent)
+            }
             uiThread {
                 view.hideLoading()
 
                 try {
                     // load data to NextMatchPresenter
-                    view.loadDataToView(data.events, listHome, listAway, setDate)
+                    view.loadDataToView(data.events, listHome, listAway, listStadium, setDate)
                 } catch (e: ConnectException) {
                     view.onFailure(e)
                 } catch (e: NullPointerException) {

@@ -10,6 +10,9 @@ import com.bumptech.glide.Glide
 import com.dicoding.picodiploma.footballleagueaplication.R
 import com.dicoding.picodiploma.footballleagueaplication.db.FavoritesModel
 import com.dicoding.picodiploma.footballleagueaplication.db.database
+import com.dicoding.picodiploma.footballleagueaplication.features.teamDetail.TeamDetailActivity
+import com.dicoding.picodiploma.footballleagueaplication.features.teamDetail.TeamDetailActivity.Companion.EXTRA_LEAGUE
+import com.dicoding.picodiploma.footballleagueaplication.features.teamDetail.TeamDetailActivity.Companion.EXTRA_TEAM
 import com.dicoding.picodiploma.footballleagueaplication.models.matchDetailModel.MatchDetailItem
 import com.dicoding.picodiploma.footballleagueaplication.networks.ApiRepository
 import com.dicoding.picodiploma.footballleagueaplication.utils.dateGMTFormat
@@ -25,6 +28,7 @@ import org.jetbrains.anko.db.classParser
 import org.jetbrains.anko.db.delete
 import org.jetbrains.anko.db.insert
 import org.jetbrains.anko.db.select
+import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 import java.sql.SQLClientInfoException
 
@@ -40,7 +44,7 @@ class DetailMatchActivity : AppCompatActivity(), DetailMatchView {
     private var detailMatchAdapter = GroupAdapter<ViewHolder>()
     private lateinit var detailMatchPresenter: DetailMatchPresenter
 
-    companion object{
+    companion object {
         const val EXTRA_EVENT: String = "idEvent"
     }
 
@@ -65,6 +69,10 @@ class DetailMatchActivity : AppCompatActivity(), DetailMatchView {
         // initialize presenter and run method for fetch data from server
         detailMatchPresenter = DetailMatchPresenter(this, Gson(), ApiRepository())
         detailMatchPresenter.getDetailMatchData(idEvent)
+
+
+        collapsing_toolbar.setCollapsedTitleTextColor(ContextCompat.getColor(this, android.R.color.white))
+        collapsing_toolbar.setExpandedTitleColor(ContextCompat.getColor(this, android.R.color.transparent))
 
     }
 
@@ -102,14 +110,33 @@ class DetailMatchActivity : AppCompatActivity(), DetailMatchView {
             txt_goal_home.text = strHomeGoalDetails?.replace(oldValue = ";", newValue = "\n") ?: ""
             txt_goal_away.text = strAwayGoalDetails?.replace(oldValue = ";", newValue = "\n") ?: ""
         }
+
         listTeam = mutableListOf()
         listTeam.clear()
         listTeam.addAll(listData)
+
+
+        img_home.setOnClickListener {
+            startActivity<TeamDetailActivity>(
+                EXTRA_TEAM to listData[0].idHomeTeam,
+                EXTRA_LEAGUE to listData[0].idLeague
+            )
+        }
+
+        img_away.setOnClickListener {
+            startActivity<TeamDetailActivity>(
+                EXTRA_TEAM to listData[0].idAwayTeam,
+                EXTRA_LEAGUE to listData[0].idLeague
+            )
+        }
+
+        collapsing_toolbar.title = "${listData[0].strHomeTeam} VS ${listData[0].strAwayTeam}"
     }
 
     override fun loadHomeBadgeToView(urlHomeBadge: String) {
         // load image badge team home to view
         Glide.with(this).load(urlHomeBadge).into(img_home)
+
 
         urlBadgeHome = urlHomeBadge
     }
@@ -159,6 +186,7 @@ class DetailMatchActivity : AppCompatActivity(), DetailMatchView {
         }
     }
 
+    // add data and put insert them to favorite table
     private fun addToFavorite() {
         try {
             listTeam[0].apply {
@@ -182,6 +210,7 @@ class DetailMatchActivity : AppCompatActivity(), DetailMatchView {
         }
     }
 
+    // remove data from table favorite
     private fun removeFromFavorite() {
         try {
             database.use {
@@ -195,6 +224,7 @@ class DetailMatchActivity : AppCompatActivity(), DetailMatchView {
         }
     }
 
+    // This method is to ensure whether the data in the favorite table exists or not yet
     private fun setFavorite() {
         if (isFavorite) {
             menuItem?.getItem(0)?.icon = ContextCompat.getDrawable(this, R.drawable.ic_favorite_black_24dp)
@@ -203,11 +233,14 @@ class DetailMatchActivity : AppCompatActivity(), DetailMatchView {
         }
     }
 
+    // this method for me take data from favorite table
     private fun favoriteState() {
         database.use {
             val result = select(FavoritesModel.TABLE_FAVORITE)
-                .whereArgs("(ID_EVENT = {id})",
-                    "id" to idEvent)
+                .whereArgs(
+                    "(ID_EVENT = {id})",
+                    "id" to idEvent
+                )
             val favorite = result.parseList(classParser<FavoritesModel>())
             isFavorite = favorite.isNotEmpty()
         }

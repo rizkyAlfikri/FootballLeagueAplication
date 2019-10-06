@@ -13,6 +13,7 @@ class NextMatchHolder(
     private val nextMatchItem: NextMatchItem,
     private val badgeHome: String,
     private val badgeAway: String,
+    private val listStadium: String?,
     private val listener: (NextMatchItem) -> Unit
 ): Item() {
     override fun bind(viewHolder: ViewHolder, position: Int) {
@@ -23,6 +24,7 @@ class NextMatchHolder(
                 txt_score_home.text = it.intHomeScore?.toString() ?: "-"
                 txt_score_away.text = it.intAwayScore?.toString() ?: "-"
                 txt_time.text = timeGMTFormat(it.strTime) ?: "-"
+                txt_stadium.text = listStadium
             }
 
             Glide.with(context).load(badgeHome).apply(RequestOptions()).into(img_home)

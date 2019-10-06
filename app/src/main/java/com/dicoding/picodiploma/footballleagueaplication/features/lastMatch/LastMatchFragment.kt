@@ -54,19 +54,12 @@ class LastMatchFragment: Fragment(), LastMatchView {
         lastPresenter = LastMatchPresenter(this, ApiRepository(), Gson())
         lastPresenter.getLastMatchData(idLeague)
 
-//        lastAdapter = LastMatchAdapter(listData, listBadgeHome, listBadgeAway){
-//            startActivity<DetailMatchActivity>(
-//                EXTRA_EVENT to it.idEvent)
-//        }
-
         // initialize recycler view
         rv_last_match.apply {
             layoutManager = LinearLayoutManager(context)
             setHasFixedSize(true)
             adapter = lastAdapter
         }
-
-
     }
 
     override fun showLoading() {
@@ -81,26 +74,28 @@ class LastMatchFragment: Fragment(), LastMatchView {
         data: List<LastMatchItem>,
         dataHome: MutableList<String>,
         dataAway: MutableList<String>,
+        dataStadium: MutableList<String?>,
         dataDate: Set<String>
     ) {
 
-        dataDate.forEach { itDate ->
+        // load last match data to recycler view
+        dataDate.map { itDate ->
             lastAdapter.add(LastMatchDateHolder(itDate))
             for (position in data.indices) {
                 if (data[position].dateEvent == itDate) {
-                    lastAdapter.add(LastMatchHolder(data[position], dataHome[position], dataAway[position]){
+                    lastAdapter.add(LastMatchHolder(
+                        data[position],
+                        dataHome[position],
+                        dataAway[position],
+                        dataStadium[position]){
+
                         startActivity<DetailMatchActivity>(
                             EXTRA_EVENT to it.idEvent)
-
                     })
                 }
             }
         }
-
-
     }
-
-
 
     override fun onFailure(throwable: Throwable) {
         // handling error when data failure to display

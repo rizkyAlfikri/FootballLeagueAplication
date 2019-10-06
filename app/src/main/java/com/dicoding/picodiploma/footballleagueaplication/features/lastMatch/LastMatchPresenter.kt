@@ -17,8 +17,11 @@ class LastMatchPresenter(
     fun getLastMatchData(idLeague: String?) {
         val listHome = mutableListOf<String>()
         val listAway = mutableListOf<String>()
+        val listStadium = mutableListOf<String?>()
         val setDate = mutableSetOf<String>()
+
         view.showLoading()
+
         doAsync {
 
             // get data past league match from server
@@ -30,6 +33,7 @@ class LastMatchPresenter(
             val position = data.lastMatchItems.size
             listHome.clear()
             listAway.clear()
+            listStadium.clear()
 
             repeat(position) {
 
@@ -47,8 +51,10 @@ class LastMatchPresenter(
 
                 listHome.add(dataHome.teams[0].strTeamBadge)
                 listAway.add(dataAway.teams[0].strTeamBadge)
+                listStadium.add(dataHome.teams[0].strStadium)
             }
 
+            // get date event from server and put them to Set collection
             setDate.clear()
             data.lastMatchItems.map {
                 setDate.add(it.dateEvent)
@@ -58,7 +64,7 @@ class LastMatchPresenter(
                 view.hideLoading()
                 try {
                     // load to LastMatchFragment
-                    view.loadLastMatch(data.lastMatchItems, listHome, listAway, setDate)
+                    view.loadLastMatch(data.lastMatchItems, listHome, listAway, listStadium, setDate)
                 } catch (e: NullPointerException) {
                     view.onFailure(e)
                 }

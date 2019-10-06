@@ -1,7 +1,7 @@
 package com.dicoding.picodiploma.footballleagueaplication.networks
 
-import com.dicoding.picodiploma.footballleagueaplication.models.lastMatchModel.LastMatchResponse
-import com.dicoding.picodiploma.footballleagueaplication.models.nextMatchModel.NextMatchResponse
+import com.dicoding.picodiploma.footballleagueaplication.models.TeamTableModel.TeamTableResponse
+import com.dicoding.picodiploma.footballleagueaplication.models.playerModel.PlayerResponse
 import com.dicoding.picodiploma.footballleagueaplication.models.teamDetailModel.TeamDetailResponse
 import com.dicoding.picodiploma.footballleagueaplication.models.teamModel.TeamResponse
 import retrofit2.http.GET
@@ -16,11 +16,10 @@ interface ApiService {
  @GET("lookupteam.php")
  fun getTeamDetailFromServer(@Query("id") idTeam: String?): Observable<TeamDetailResponse>
 
- @GET("eventspastleague.php")
- fun getLastMatch(@Query("id") idLeague: String?): Observable<LastMatchResponse>
+ @GET("lookup_all_players.php")
+ fun getPlayer(@Query("id") idTeam: String?): Observable<PlayerResponse>
 
- @GET("eventsnextleague.php")
- fun getNextMatch(@Query("id") idLeague: String?): Observable<NextMatchResponse>
-
+ @GET("lookuptable.php")
+ fun getTableTeam(@Query("l") idLeague: String?, @Query("s") idSeason: String?): Observable<TeamTableResponse>
 
 }

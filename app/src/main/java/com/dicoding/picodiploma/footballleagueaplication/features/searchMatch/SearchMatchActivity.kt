@@ -10,7 +10,6 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.content.getSystemService
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dicoding.picodiploma.footballleagueaplication.R
-import com.dicoding.picodiploma.footballleagueaplication.models.searchMatchModel.SearchMatchHolder
 import com.dicoding.picodiploma.footballleagueaplication.features.detailMatch.DetailMatchActivity
 import com.dicoding.picodiploma.footballleagueaplication.features.detailMatch.DetailMatchActivity.Companion.EXTRA_EVENT
 import com.dicoding.picodiploma.footballleagueaplication.models.searchMatchModel.SearchMatchItem
@@ -109,7 +108,8 @@ class SearchMatchActivity : AppCompatActivity(), SearchMatchView {
     override fun loadDataToView(
         data: MutableList<SearchMatchItem>,
         dataHome: MutableList<String>,
-        dataAway: MutableList<String>
+        dataAway: MutableList<String>,
+        dataStadium: MutableList<String?>
     ) {
 
         // clear data in adapter when adapter will load new data
@@ -121,7 +121,8 @@ class SearchMatchActivity : AppCompatActivity(), SearchMatchView {
                 SearchMatchHolder(
                     data[positions],
                     dataHome[positions],
-                    dataAway[positions]
+                    dataAway[positions],
+                    dataStadium[positions]
                 ) {
                     startActivity<DetailMatchActivity>(EXTRA_EVENT to it.idEvent)
                 }

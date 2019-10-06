@@ -77,6 +77,7 @@ class NextMatchFragment: Fragment(), NextMatchView{
         dataNextMatch: List<NextMatchItem>,
         dataHome: MutableList<String>,
         dataAway: MutableList<String>,
+        dataStadium: MutableList<String?>,
         dataDate: MutableSet<String>
     ) {
 
@@ -88,7 +89,8 @@ class NextMatchFragment: Fragment(), NextMatchView{
                     nextAdapter.add(NextMatchHolder(
                         dataNextMatch[position],
                         dataHome[position],
-                        dataAway[position]){
+                        dataAway[position],
+                        dataStadium[position]){
 
                         startActivity<DetailMatchActivity>( EXTRA_EVENT to it.idEvent)
                     })

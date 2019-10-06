@@ -9,6 +9,7 @@ interface LastMatchView {
         data: List<LastMatchItem>,
         dataHome: MutableList<String>,
         dataAway: MutableList<String>,
+        dataStadium: MutableList<String?>,
         dataDate: Set<String>)
     fun onFailure(throwable: Throwable)
 }

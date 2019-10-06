@@ -1,5 +1,7 @@
 package com.dicoding.picodiploma.footballleagueaplication.db
 
+
+// make table for database with data class
 data class FavoritesModel(
     val id: Long?,
     val idEvent: String?,

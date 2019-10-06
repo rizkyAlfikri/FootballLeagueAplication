@@ -22,6 +22,7 @@ class ScheduleHolder(
     private val listData: Any,
     private val listHome: String,
     private val listAway: String,
+    private val listStadium: String?,
     private val listener: (Any) -> Unit
 ): Item() {
     override fun bind(viewHolder: ViewHolder, position: Int) {
@@ -36,6 +37,7 @@ class ScheduleHolder(
                         txt_score_away.text = intAwayScore.toString()
                         txt_date.text = dateGMTFormat(dateEvent)
                         txt_time.text = timeGMTFormat(strTime)
+                        txt_stadium.text = listStadium
                         setOnClickListener { listener(this) }
                     }
                 }
@@ -46,6 +48,7 @@ class ScheduleHolder(
                         txt_away.text = strAwayTeam
                         txt_score_home.text = intHomeScore?.toString() ?: "-"
                         txt_score_away.text = intAwayScore?.toString() ?: "-"
+                        txt_stadium.text = listStadium
                         txt_time.text = timeGMTFormat(strTime) ?: "-"
                         txt_date.text = dateGMTFormat(dateEvent) ?: "-"
                         setOnClickListener { listener(this) }

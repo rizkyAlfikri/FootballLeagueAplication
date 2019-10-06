@@ -10,6 +10,7 @@ interface NextMatchView {
         dataNextMatch: List<NextMatchItem>,
         dataHome: MutableList<String>,
         dataAway: MutableList<String>,
+        dataStadium: MutableList<String?>,
         dataDate: MutableSet<String>
     )
 

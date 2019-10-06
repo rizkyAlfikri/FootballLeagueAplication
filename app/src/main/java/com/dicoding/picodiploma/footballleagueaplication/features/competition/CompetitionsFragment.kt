@@ -37,6 +37,8 @@ class CompetitionsFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val idLeague = arguments?.getString("id")
+
+        // initialize view pager and adapter
         val sectionsPagerAdapter = idLeague?.let { SectionsPagerAdapter(requireContext(), childFragmentManager, it) }
         val viewPager: ViewPager = view.findViewById(R.id.view_pager)
         viewPager.adapter = sectionsPagerAdapter

@@ -14,11 +14,14 @@ class FavoriteHolder(private val listFavorite: FavoritesModel, private val liste
 
     override fun bind(viewHolder: ViewHolder, position: Int) {
         viewHolder.itemView.apply {
+
+            // load list favorite to view
             txt_home.text = listFavorite.homeTeam
             txt_away.text = listFavorite.awayTeam
-            txt_score_home.text = listFavorite.homeScore
-            txt_score_away.text = listFavorite.awayScore
+            txt_score_home.text = listFavorite.homeScore ?: "-"
+            txt_score_away.text = listFavorite.awayScore ?: "-"
             txt_time.text = timeGMTFormat(listFavorite.time)
+            txt_stadium.text = dateGMTFormat(listFavorite.date)
             Glide.with(context).load(listFavorite.homeBadge).into(img_home)
             Glide.with(context).load(listFavorite.awayBadge).into(img_away)
 

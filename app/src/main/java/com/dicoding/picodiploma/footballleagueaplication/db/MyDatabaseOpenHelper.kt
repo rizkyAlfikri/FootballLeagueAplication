@@ -18,6 +18,7 @@ class MyDatabaseOpenHelper(context: Context) : ManagedSQLiteOpenHelper(context, 
         }
     }
 
+    // make database and table favorite
     override fun onCreate(db: SQLiteDatabase) {
         db.createTable(
             FavoritesModel.TABLE_FAVORITE, true,
@@ -34,10 +35,12 @@ class MyDatabaseOpenHelper(context: Context) : ManagedSQLiteOpenHelper(context, 
         )
     }
 
+    // upgrade database version if needed
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         db.dropTable(FavoritesModel.TABLE_FAVORITE, true)
     }
 }
 
+// this statement make us able to call database in activity or fragment
 val Context.database: MyDatabaseOpenHelper
     get() = MyDatabaseOpenHelper.getInstance(applicationContext)

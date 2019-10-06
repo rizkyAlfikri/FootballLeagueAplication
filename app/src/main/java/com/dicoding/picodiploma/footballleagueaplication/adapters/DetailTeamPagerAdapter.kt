@@ -16,15 +16,18 @@ private val TAB_TITLES = arrayOf(
 )
 
 class DetailTeamPagerAdapter(
-    private val context: Context, private val idLeague: String, private val idTeam: String, fm: FragmentManager
+    private val context: Context,
+    private val idLeague: String,
+    private val idTeam: String,
+    fm: FragmentManager
 ) : FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
 
     override fun getItem(position: Int): Fragment {
         return when (position) {
-            0 -> TeamOverviewFragment()
+            0 -> TeamOverviewFragment.newInstance(idLeague, idTeam)
             1 -> TeamScheduleFragment.newInstance(idLeague, idTeam)
-            else -> TeamPlayersFragment()
+            else -> TeamPlayersFragment.newInstance(idTeam)
         }
 
     }

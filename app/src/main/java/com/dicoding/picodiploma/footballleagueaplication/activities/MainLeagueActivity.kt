@@ -60,9 +60,11 @@ class MainLeagueActivity : AppCompatActivity() {
                 fragment = TeamsFragment.newInstance(leagueModel.leagueId)
                 supportFragmentManager.beginTransaction()
                     .replace(frame_container.id, fragment, fragment.javaClass.simpleName).commit()
+                return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_league -> {
                 startActivity<MainActivity>()
+                return@OnNavigationItemSelectedListener true
             }
         }
         false

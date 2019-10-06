@@ -18,9 +18,11 @@ class SearchMatchPresenter(
 ) {
 
     fun getSearchMatchData(query: String?) {
-        val listHome: MutableList<String> = mutableListOf()
-        val listAway: MutableList<String> = mutableListOf()
-        val listData: MutableList<SearchMatchItem> = mutableListOf()
+        val listHome = mutableListOf<String>()
+        val listAway = mutableListOf<String>()
+        val listData = mutableListOf<SearchMatchItem>()
+        val listStadium = mutableListOf<String?>()
+
         view.showLoading()
 
         doAsync {
@@ -42,6 +44,7 @@ class SearchMatchPresenter(
 
             listHome.clear()
             listAway.clear()
+            listStadium.clear()
             for (position in listData.indices) {
 
                 // get image badget home team from server
@@ -60,6 +63,7 @@ class SearchMatchPresenter(
 
                 listHome.add(dataHome.teams[0].strTeamBadge)
                 listAway.add(dataAway.teams[0].strTeamBadge)
+                listStadium.add(dataHome.teams[0].strStadium)
 
             }
 
@@ -67,7 +71,7 @@ class SearchMatchPresenter(
                 view.hideLoading()
                 try {
                     // load data to search activity
-                    view.loadDataToView(listData, listHome, listAway)
+                    view.loadDataToView(listData, listHome, listAway, listStadium)
                 } catch (e: HttpException) {
                     view.onFailure(e)
                 } catch (e: NullPointerException) {

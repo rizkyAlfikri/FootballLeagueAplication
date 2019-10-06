@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
+    android:elevation="12dp"
     android:layout_marginTop="16dp"
     android:layout_marginBottom="8dp"
+    android:background="@android:color/white"
     app:cardCornerRadius="12dp"
     android:layout_marginLeft="12dp"
     android:layout_marginRight="12dp"
@@ -138,6 +139,18 @@
             app:layout_constraintStart_toStartOf="@+id/txt_date"
             app:layout_constraintTop_toBottomOf="@+id/txt_date"
             tools:text="17:00" />
+
+        <TextView
+            android:id="@+id/txt_stadium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/primary_text"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@+id/txt_colon"
+            app:layout_constraintStart_toStartOf="@+id/txt_colon"
+            app:layout_constraintTop_toBottomOf="@+id/txt_colon"
+            tools:text="Si Jalak Harupat" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

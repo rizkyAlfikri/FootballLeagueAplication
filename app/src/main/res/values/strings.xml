@@ -318,4 +318,11 @@
     <string name="settings">Settings</string>
     <string name="favorite">Favorite</string>
     <string name="team_badge">Team Badge</string>
+    <string name="competitions_record">Competitions Record</string>
+    <string name="won">WON</string>
+    <string name="lost">Lost</string>
+    <string name="drawn">Drawn</string>
+    <string name="stadium">Stadium</string>
+    <string name="jersey">Jersey</string>
+    <string name="bullet">•</string>
 </resources>

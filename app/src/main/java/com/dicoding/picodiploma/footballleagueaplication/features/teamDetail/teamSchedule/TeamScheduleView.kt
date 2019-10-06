@@ -6,6 +6,20 @@ import com.dicoding.picodiploma.footballleagueaplication.models.nextMatchModel.N
 interface TeamScheduleView {
     fun showLoading()
     fun hideLoading()
-    fun getScheduleData(listLastMatch: List<LastMatchItem>, listNextMatchItem: List<NextMatchItem>)
-    fun onFailure(throwable: Throwable?)
+    fun loadLastTeam(
+        listLastMatch: MutableList<LastMatchItem>,
+        listLastBadgeHome: MutableList<String>,
+        listLastBadgeAway: MutableList<String>,
+        listLastStadiumHome: MutableList<String?>
+    )
+
+    //    fun loadLastAwayTeam(listLastBadgeAway: MutableList<String>)
+    fun loadNextTeam(
+        listNextMatch: MutableList<NextMatchItem>,
+        listNextBadgeHome: MutableList<String>,
+        listNextBadgeAway: MutableList<String>,
+        listNextStadiumHome: MutableList<String?>
+
+    )
+    fun onFailure(throwable: Throwable)
 }
