@@ -5,16 +5,18 @@ import com.dicoding.picodiploma.footballleagueaplication.models.searchMatchModel
 import com.dicoding.picodiploma.footballleagueaplication.models.teamDetailModel.TeamDetailResponse
 import com.dicoding.picodiploma.footballleagueaplication.networks.ApiRepository
 import com.dicoding.picodiploma.footballleagueaplication.networks.TheSportDb
+import com.dicoding.picodiploma.footballleagueaplication.utils.CoroutineContextProvider
 import com.google.gson.Gson
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import kotlin.NullPointerException
 
 class SearchMatchPresenter(
     private val view: SearchMatchView,
     private val gson: Gson,
-    private val apiRepository: ApiRepository
+    private val apiRepository: ApiRepository,
+    private val context: CoroutineContextProvider = CoroutineContextProvider()
 ) {
 
     fun getSearchMatchData(query: String?) {
@@ -25,12 +27,12 @@ class SearchMatchPresenter(
 
         view.showLoading()
 
-        doAsync {
+        GlobalScope.launch(context.main) {
 
             // get search match data from server
             val data = gson.fromJson(
                 apiRepository
-                    .doRequest(TheSportDb.getSearchMatch(query)),
+                    .doRequest(TheSportDb.getSearchMatch(query)).await(),
                 SearchMatchResponse::class.java
             )
 
@@ -50,14 +52,14 @@ class SearchMatchPresenter(
                 // get image badget home team from server
                 val dataHome = gson.fromJson(
                     apiRepository
-                        .doRequest(TheSportDb.getTeamDetail(data.event[position].idHomeTeam)),
+                        .doRequest(TheSportDb.getTeamDetail(data.event[position].idHomeTeam)).await(),
                     TeamDetailResponse::class.java
                 )
 
                 // get image badget home team from server
                 val dataAway = gson.fromJson(
                     apiRepository
-                        .doRequest(TheSportDb.getTeamDetail(data.event[position].idAwayTeam)),
+                        .doRequest(TheSportDb.getTeamDetail(data.event[position].idAwayTeam)).await(),
                     TeamDetailResponse::class.java
                 )
 
@@ -67,16 +69,15 @@ class SearchMatchPresenter(
 
             }
 
-            uiThread {
-                view.hideLoading()
-                try {
-                    // load data to search activity
-                    view.loadDataToView(listData, listHome, listAway, listStadium)
-                } catch (e: HttpException) {
-                    view.onFailure(e)
-                } catch (e: NullPointerException) {
-                    view.onFailure(e)
-                }
+
+            view.hideLoading()
+            try {
+                // load data to search activity
+                view.loadDataToView(listData, listHome, listAway, listStadium)
+            } catch (e: HttpException) {
+                view.onFailure(e)
+            } catch (e: NullPointerException) {
+                view.onFailure(e)
             }
         }
     }

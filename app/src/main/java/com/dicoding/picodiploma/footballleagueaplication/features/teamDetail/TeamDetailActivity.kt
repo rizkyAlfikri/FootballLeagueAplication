@@ -11,9 +11,11 @@ import com.bumptech.glide.Glide
 import com.dicoding.picodiploma.footballleagueaplication.R
 import com.dicoding.picodiploma.footballleagueaplication.adapters.DetailTeamPagerAdapter
 import com.dicoding.picodiploma.footballleagueaplication.models.teamDetailModel.TeamDetailItem
+import com.dicoding.picodiploma.footballleagueaplication.networks.ApiRepository
 import com.dicoding.picodiploma.footballleagueaplication.utils.invisible
 import com.dicoding.picodiploma.footballleagueaplication.utils.visible
 import com.google.android.material.appbar.AppBarLayout
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_team_detail.*
 import org.jetbrains.anko.toast
 
@@ -34,7 +36,8 @@ class TeamDetailActivity : AppCompatActivity(), TeamDetailView {
         val idLeague = intent.getStringExtra(EXTRA_LEAGUE)
 
 
-        val teamDetailPresenter = TeamDetailPresenter(this)
+
+        val teamDetailPresenter = TeamDetailPresenter(this, Gson(), ApiRepository())
         teamDetailPresenter.getTeamDetailData(idTeam)
 
         val teamPagerAdapter = DetailTeamPagerAdapter(this, idLeague, idTeam, supportFragmentManager)

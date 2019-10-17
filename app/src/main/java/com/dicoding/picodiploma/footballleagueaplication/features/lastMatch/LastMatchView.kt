@@ -11,5 +11,5 @@ interface LastMatchView {
         dataAway: MutableList<String>,
         dataStadium: MutableList<String?>,
         dataDate: Set<String>)
-    fun onFailure(throwable: Throwable)
+    fun onFailure(throwable: String)
 }

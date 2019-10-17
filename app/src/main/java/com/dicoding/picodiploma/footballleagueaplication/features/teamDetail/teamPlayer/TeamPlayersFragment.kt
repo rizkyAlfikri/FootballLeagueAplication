@@ -2,15 +2,17 @@ package com.dicoding.picodiploma.footballleagueaplication.features.teamDetail.te
 
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dicoding.picodiploma.footballleagueaplication.R
 import com.dicoding.picodiploma.footballleagueaplication.models.playerModel.PlayerItem
+import com.dicoding.picodiploma.footballleagueaplication.networks.ApiRepository
 import com.dicoding.picodiploma.footballleagueaplication.utils.invisible
 import com.dicoding.picodiploma.footballleagueaplication.utils.visible
+import com.google.gson.Gson
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.fragment_team_players.*
@@ -50,7 +52,7 @@ class TeamPlayersFragment : Fragment(), TeamPlayerView {
             adapter = playerAdapter
         }
 
-        val playerPresenter = TeamPlayerPresenter(this)
+        val playerPresenter = TeamPlayerPresenter(this, Gson(), ApiRepository())
         playerPresenter.getPlayerFromServer(idTeam)
     }
 

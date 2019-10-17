@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -28,6 +29,7 @@ import org.jetbrains.anko.db.classParser
 import org.jetbrains.anko.db.delete
 import org.jetbrains.anko.db.insert
 import org.jetbrains.anko.db.select
+import org.jetbrains.anko.design.snackbar
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 import java.sql.SQLClientInfoException
@@ -169,7 +171,7 @@ class DetailMatchActivity : AppCompatActivity(), DetailMatchView {
 
             R.id.action_favorite -> {
                 if (this::listTeam.isInitialized) {
-                    if (isFavorite) removeFromFavorite() else addToFavorite()
+                    if (isFavorite) removeFromFavorite()  else addToFavorite()
 
                     isFavorite = !isFavorite
                     setFavorite()
@@ -204,6 +206,7 @@ class DetailMatchActivity : AppCompatActivity(), DetailMatchView {
                         FavoritesModel.AWAY_BADGE to urlBadgeAway
                     )
                 }
+                rv_detail_match.snackbar("Added to favorite")
             }
         } catch (e: SQLClientInfoException) {
             toast(e.localizedMessage).show()
@@ -222,6 +225,7 @@ class DetailMatchActivity : AppCompatActivity(), DetailMatchView {
         } catch (e: SQLClientInfoException) {
             toast(e.localizedMessage)
         }
+        rv_detail_match.snackbar("Removed from favorite")
     }
 
     // This method is to ensure whether the data in the favorite table exists or not yet

@@ -13,8 +13,10 @@ import com.bumptech.glide.Glide
 import com.dicoding.picodiploma.footballleagueaplication.R
 import com.dicoding.picodiploma.footballleagueaplication.models.TeamTableModel.Table
 import com.dicoding.picodiploma.footballleagueaplication.models.teamDetailModel.TeamDetailItem
+import com.dicoding.picodiploma.footballleagueaplication.networks.ApiRepository
 import com.dicoding.picodiploma.footballleagueaplication.utils.invisible
 import com.dicoding.picodiploma.footballleagueaplication.utils.visible
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_team_overview.*
 import lecho.lib.hellocharts.model.PieChartData
 import lecho.lib.hellocharts.model.SliceValue
@@ -50,7 +52,7 @@ class TeamOverviewFragment : Fragment(), TeamOverviewView {
         val idLeague = arguments?.getString("idLeague")
         val idTeam = arguments?.getString("idTeam")
 
-        val overviewPresenter = TeamOverviewPresenter(this)
+        val overviewPresenter = TeamOverviewPresenter(this, Gson(), ApiRepository())
         overviewPresenter.getTeamOverviewData(idLeague, "1920", idTeam)
     }
 
@@ -67,8 +69,8 @@ class TeamOverviewFragment : Fragment(), TeamOverviewView {
 
         teamDetailData?.let {
             it[0].apply {
-                txt_stadium.text = strStadium
-                txt_capacity.text = "$intStadiumCapacity peoples"
+                txt_stadium.text = strStadium ?: "-"
+                txt_capacity.text = "Capacity: $intStadiumCapacity peoples"
                 Glide.with(this@TeamOverviewFragment).load(strStadiumThumb).into(img_stadium)
                 Glide.with(requireContext()).load(strTeamJersey).into(img_jersey)
             }

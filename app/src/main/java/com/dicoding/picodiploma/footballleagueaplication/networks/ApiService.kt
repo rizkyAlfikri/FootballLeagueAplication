@@ -1,6 +1,8 @@
 package com.dicoding.picodiploma.footballleagueaplication.networks
 
 import com.dicoding.picodiploma.footballleagueaplication.models.TeamTableModel.TeamTableResponse
+import com.dicoding.picodiploma.footballleagueaplication.models.lastMatchModel.LastMatchResponse
+import com.dicoding.picodiploma.footballleagueaplication.models.nextMatchModel.NextMatchResponse
 import com.dicoding.picodiploma.footballleagueaplication.models.playerModel.PlayerResponse
 import com.dicoding.picodiploma.footballleagueaplication.models.teamDetailModel.TeamDetailResponse
 import com.dicoding.picodiploma.footballleagueaplication.models.teamModel.TeamResponse
@@ -22,4 +24,9 @@ interface ApiService {
  @GET("lookuptable.php")
  fun getTableTeam(@Query("l") idLeague: String?, @Query("s") idSeason: String?): Observable<TeamTableResponse>
 
+ @GET("eventspastleague.php")
+ fun getLastMatch(@Query("id") idLeague: String?): Observable<LastMatchResponse>
+
+ @GET("eventsnextleague.php")
+ fun getNextMatch(@Query("id") idLeague: String?): Observable<NextMatchResponse>
 }

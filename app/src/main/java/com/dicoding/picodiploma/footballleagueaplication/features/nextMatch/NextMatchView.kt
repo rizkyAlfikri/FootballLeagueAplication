@@ -7,12 +7,19 @@ interface NextMatchView {
     fun showLoading()
     fun hideLoading()
     fun loadDataToView(
-        dataNextMatch: List<NextMatchItem>,
-        dataHome: MutableList<String>,
-        dataAway: MutableList<String>,
-        dataStadium: MutableList<String?>,
-        dataDate: MutableSet<String>
+        data: List<NextMatchItem>,
+        dataDate: Set<String>
     )
 
-    fun onFailure(throwable: Throwable)
+    fun loadHomeTeam(
+        dataHome: MutableList<String>,
+        dataStadium: MutableList<String?>
+    )
+
+    fun loadAwayTeam(
+        dataAway: MutableList<String>
+    )
+
+
+    fun onFailure(throwable: String)
 }

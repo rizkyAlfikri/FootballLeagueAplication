@@ -3,52 +3,48 @@ package com.dicoding.picodiploma.footballleagueaplication.features.home
 import com.dicoding.picodiploma.footballleagueaplication.models.leagueDetailModel.LeagueDetailResponse
 import com.dicoding.picodiploma.footballleagueaplication.networks.ApiRepository
 import com.dicoding.picodiploma.footballleagueaplication.networks.TheSportDb
+import com.dicoding.picodiploma.footballleagueaplication.utils.CoroutineContextProvider
 import com.google.gson.Gson
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.net.ConnectException
 
 
 class LeagueDetailPresenter(
     private val view: LeagueDetailView,
     private val gson: Gson,
-    private val apiRepository: ApiRepository
+    private val apiRepository: ApiRepository,
+    private val context: CoroutineContextProvider = CoroutineContextProvider()
 ) {
 
     fun getLeagueDetail(idLeague: String?) {
-        var listBanner = mutableListOf<String>()
 
         view.showLoading()
 
-        doAsync {
+        GlobalScope.launch(context.main) {
             // get data detail league from server
             val data = gson.fromJson(
                 apiRepository
-                    .doRequest(TheSportDb.getDetailLeague(idLeague)),
+                    .doRequest(TheSportDb.getDetailLeague(idLeague)).await(),
                 LeagueDetailResponse::class.java
             )
 
             // collect image banner
-            data.leagues[0].apply {
-                listBanner.clear()
-                listBanner = mutableListOf(
-                    strBadge, strPoster, strFanart1, strFanart2, strFanart3, strFanart4, strTrophy
-                )
+//            data.leagues[0].apply {
+//                listBanner.clear()
+//                listBanner = mutableListOf(
+//                    strBadge, strPoster, strFanart1, strFanart2, strFanart3, strFanart4, strTrophy
+//                )
+//            }
 
-            }
+            view.hideLoading()
 
-            uiThread {
-                view.hideLoading()
-
-                try {
-                    // load data to home fragment
-                    view.loadDataToView(data)
-                    view.loadBannerToView(listBanner)
-                } catch (e: ConnectException) {
-                    view.onFailure(e)
-                } catch (e: NullPointerException) {
-                    view.onFailure(e)
-                }
+            try {
+                // load data to home fragment
+                view.loadDataToView(data)
+//                view.loadBannerToView(listBanner)
+            } catch (e: ConnectException) {
+                view.onFailure(e)
             }
         }
     }

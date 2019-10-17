@@ -97,9 +97,9 @@ class LastMatchFragment: Fragment(), LastMatchView {
         }
     }
 
-    override fun onFailure(throwable: Throwable) {
+    override fun onFailure(throwable: String) {
         // handling error when data failure to display
-        toast("$throwable")
+        toast(throwable)
     }
 }
 

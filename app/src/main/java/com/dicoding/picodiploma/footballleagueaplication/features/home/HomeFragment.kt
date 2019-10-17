@@ -87,14 +87,31 @@ class HomeFragment : Fragment(), LeagueDetailView {
             txt_twiter?.text = strTwitter
             txt_youtube?.text = strYoutube
         }
-    }
 
-    override fun loadBannerToView(listBanner: MutableList<String>) {
-        // load image banner to view holder class
+
+        var listBanner = mutableListOf<String>()
+        listData.leagues.map { listBanner = mutableListOf(
+            it.strBadge,
+            it.strPoster,
+            it.strFanart1,
+            it.strFanart2,
+            it.strFanart3,
+            it.strFanart4,
+            it.strTrophy) }
+
         listBanner.map {
             homeAdapter.add(BannerCarouselHolder(it))
         }
     }
+
+
+
+//    override fun loadBannerToView(listBanner: MutableList<String>) {
+//        // load image banner to view holder class
+//        listBanner.map {
+//            homeAdapter.add(BannerCarouselHolder(it))
+//        }
+//    }
 
     // handling error when data failure to display
     override fun onFailure(throwable: Throwable) {
