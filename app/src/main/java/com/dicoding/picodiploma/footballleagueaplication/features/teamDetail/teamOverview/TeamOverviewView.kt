@@ -6,7 +6,6 @@ import com.dicoding.picodiploma.footballleagueaplication.models.teamDetailModel.
 interface TeamOverviewView {
     fun showLoading()
     fun hideLoading()
-    fun loadTeamDetailToView(teamDetailData: List<TeamDetailItem>?)
-    fun loadTeamTableToView(teamTableData: List<Table>)
-    fun onFailure(throwable: Throwable?)
+    fun loadTeamOverviewToView(teamTableData: List<Table>, teamDetailData: List<TeamDetailItem>)
+    fun onFailure(throwable: String)
 }

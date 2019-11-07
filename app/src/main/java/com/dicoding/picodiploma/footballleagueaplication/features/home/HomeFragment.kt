@@ -10,11 +10,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import com.dicoding.picodiploma.footballleagueaplication.R
 import com.dicoding.picodiploma.footballleagueaplication.models.leagueDetailModel.LeagueDetailResponse
-import com.dicoding.picodiploma.footballleagueaplication.networks.ApiRepository
+import com.dicoding.picodiploma.footballleagueaplication.repository.LeagueDetailRepository
+import com.dicoding.picodiploma.footballleagueaplication.utils.EspressoIdlingResource
 import com.dicoding.picodiploma.footballleagueaplication.utils.dateGMTFormat
 import com.dicoding.picodiploma.footballleagueaplication.utils.invisible
 import com.dicoding.picodiploma.footballleagueaplication.utils.visible
-import com.google.gson.Gson
+import com.dicoding.picodiploma.footballleagueaplication.viewHolder.BannerCarouselHolder
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -48,8 +49,9 @@ class HomeFragment : Fragment(), LeagueDetailView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        EspressoIdlingResource.incrementIdle()
         // initialize presenter and run method for fetch data from server
-        homePresenter = LeagueDetailPresenter(this, Gson(), ApiRepository())
+        homePresenter = LeagueDetailPresenter(this, LeagueDetailRepository())
         arguments?.let {
             homePresenter.getLeagueDetail(it.getString("id"))
         }
@@ -75,6 +77,7 @@ class HomeFragment : Fragment(), LeagueDetailView {
         progress_bar?.invisible()
     }
 
+    // load detail league data to view
     override fun loadDataToView(listData: LeagueDetailResponse) {
         listData.leagues[0].apply {
             txt_league?.text = strLeague ?: ""
@@ -86,35 +89,27 @@ class HomeFragment : Fragment(), LeagueDetailView {
             txt_facebook?.text = strFacebook
             txt_twiter?.text = strTwitter
             txt_youtube?.text = strYoutube
-        }
 
-
-        var listBanner = mutableListOf<String>()
-        listData.leagues.map { listBanner = mutableListOf(
-            it.strBadge,
-            it.strPoster,
-            it.strFanart1,
-            it.strFanart2,
-            it.strFanart3,
-            it.strFanart4,
-            it.strTrophy) }
-
-        listBanner.map {
-            homeAdapter.add(BannerCarouselHolder(it))
         }
     }
 
+    // load banner image to view
+    override fun loadBannerToView(listBanner: MutableList<String>) {
+        listBanner.map {
+            homeAdapter.add(BannerCarouselHolder(it))
+        }
 
-
-//    override fun loadBannerToView(listBanner: MutableList<String>) {
-//        // load image banner to view holder class
-//        listBanner.map {
-//            homeAdapter.add(BannerCarouselHolder(it))
-//        }
-//    }
+        if (!EspressoIdlingResource.idlingResource.isIdleNow) {
+            EspressoIdlingResource.decrementIdle()
+        }
+    }
 
     // handling error when data failure to display
-    override fun onFailure(throwable: Throwable) {
-        toast("$throwable")
+    override fun onFailure(throwable: String) {
+        toast(throwable)
+
+        if (!EspressoIdlingResource.idlingResource.isIdleNow) {
+            EspressoIdlingResource.decrementIdle()
+        }
     }
 }

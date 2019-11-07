@@ -1,23 +1,17 @@
 package com.dicoding.picodiploma.footballleagueaplication.features.lastMatch
 
+
 import com.dicoding.picodiploma.footballleagueaplication.models.lastMatchModel.LastMatchItem
-import com.dicoding.picodiploma.footballleagueaplication.models.lastMatchModel.LastMatchResponse
-import com.dicoding.picodiploma.footballleagueaplication.models.teamDetailModel.TeamDetailItem
 import com.dicoding.picodiploma.footballleagueaplication.models.teamDetailModel.TeamDetailResponse
-import com.dicoding.picodiploma.footballleagueaplication.networks.ApiRepository
-import com.dicoding.picodiploma.footballleagueaplication.utils.TestContextProvider
-import com.google.gson.Gson
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.runBlocking
-import org.junit.Test
-
-
+import com.dicoding.picodiploma.footballleagueaplication.repository.LastMatchRepository
+import com.dicoding.picodiploma.footballleagueaplication.repository.RepositoryMultipleCallback
+import com.nhaarman.mockito_kotlin.argumentCaptor
+import com.nhaarman.mockito_kotlin.eq
+import com.nhaarman.mockito_kotlin.verify
 import org.junit.Before
-import org.mockito.ArgumentMatchers
+import org.junit.Test
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
-import java.net.ConnectException
 
 class LastMatchPresenterTest {
 
@@ -25,87 +19,67 @@ class LastMatchPresenterTest {
     private lateinit var view: LastMatchView
 
     @Mock
-    private lateinit var gson: Gson
-
-    @Mock
-    private lateinit var apiRepository: ApiRepository
-
-    @Mock
-    private lateinit var apiResponse: Deferred<String>
+    private lateinit var lastMatchRepository: LastMatchRepository
 
     private lateinit var lastPresenter: LastMatchPresenter
 
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        lastPresenter = LastMatchPresenter(view, apiRepository, gson, TestContextProvider())
+        lastPresenter = LastMatchPresenter(view, lastMatchRepository)
     }
 
     @Test
-    fun getLastMatchData() {
-        val listLastMatch = mutableListOf<LastMatchItem>()
-        val listTeamHome = mutableListOf<TeamDetailItem>()
-        val listTeamAway = mutableListOf<TeamDetailItem>()
-        val lastResponse = LastMatchResponse(listLastMatch)
-        val homeResponse = TeamDetailResponse(listTeamHome)
-        val awayResponse = TeamDetailResponse(listTeamAway)
+    fun getLastMatchDataSuccessTest() {
         val idLeague = "4328"
+        val dataMatch = mutableSetOf<LastMatchItem>()
+        val dataHomeBadge = mutableListOf<TeamDetailResponse>()
+        val dataAwayBadge = mutableListOf<TeamDetailResponse>()
 
-        runBlocking {
-            Mockito.`when`(apiRepository.doRequest(ArgumentMatchers.anyString()))
-                .thenReturn(apiResponse)
-            Mockito.`when`(apiResponse.await()).thenReturn("")
+        val listLastResult = mutableListOf<LastMatchItem>()
+        val listHomeResult = mutableListOf<String>()
+        val listAwayResult = mutableListOf<String>()
+        val listStadiumResult = mutableListOf<String?>()
+        val setDateResult = mutableSetOf<String>()
 
-            Mockito.`when`(
-                gson.fromJson(
-                    "",
-                    LastMatchResponse::class.java
-                )
-            ).thenReturn(lastResponse )
+        lastPresenter.getLastMatchData(idLeague)
 
-            Mockito.`when`(
-                gson.fromJson(
-                    "",
-                    TeamDetailResponse::class.java
-                )
-            ).thenReturn(homeResponse)
-
-            Mockito.`when`(
-                gson.fromJson(
-                    "",
-                    TeamDetailResponse::class.java
-                )
-            ).thenReturn(awayResponse)
-
-            val listBadgeHome = mutableListOf<String>()
-            val listBadgeAway = mutableListOf<String>()
-            val listStadium = mutableListOf<String?>()
-            val setDate = mutableSetOf<String>()
-
-            homeResponse.teams.forEach {
-                listBadgeHome.add(it.strTeamBadge)
-                listStadium.add(it.strStadium)
-            }
-
-            awayResponse.teams.forEach {
-                listBadgeAway.add(it.strTeamBadge)
-            }
-
-            lastResponse.lastMatchItems.forEach {
-                setDate.add(it.dateEvent)
-            }
-
-            lastPresenter.getLastMatchData(idLeague)
-
-            try {
-                Mockito.verify(view).showLoading()
-                Mockito.verify(view)
-                    .loadLastMatch(lastResponse.lastMatchItems, listBadgeHome, listBadgeAway, listStadium, setDate)
-                Mockito.verify(view).hideLoading()
-            } catch (e: ConnectException) {
-                Mockito.verify(view).onFailure(e)
-            }
+        argumentCaptor<RepositoryMultipleCallback<Set<LastMatchItem>, List<TeamDetailResponse>>>().apply {
+            verify(lastMatchRepository).getLastMatchData(eq(idLeague), capture())
+            firstValue.onDataLoaded(dataMatch, dataHomeBadge, dataAwayBadge)
         }
 
+        dataMatch.map {
+            listLastResult.add(it)
+            setDateResult.add(it.dateEvent)
+        }
+
+        dataHomeBadge.map {
+            listHomeResult.add(it.teams[0].strTeamBadge)
+            listStadiumResult.add(it.teams[0].strStadium)
+        }
+
+        dataAwayBadge.map {
+            listAwayResult.add(it.teams[0].strTeamBadge)
+        }
+
+        verify(view).showLoading()
+        verify(view).hideLoading()
+        verify(view).loadLastMatchData(listLastResult, listHomeResult, listAwayResult, listStadiumResult, setDateResult)
+    }
+
+    @Test
+    fun getLastMatchDataErrorTest() {
+        lastPresenter.getLastMatchData("")
+
+
+        argumentCaptor<RepositoryMultipleCallback<Set<LastMatchItem>, List<TeamDetailResponse>>>().apply {
+            verify(lastMatchRepository).getLastMatchData(eq(""), capture())
+            firstValue.onDataError("")
+        }
+
+        verify(view).showLoading()
+        verify(view).hideLoading()
+        verify(view).onFailure("")
     }
 }

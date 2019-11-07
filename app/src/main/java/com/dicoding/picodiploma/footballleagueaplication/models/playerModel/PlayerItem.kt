@@ -27,7 +27,7 @@ data class PlayerItem(
     @SerializedName("strBanner")
     var strBanner: String?,
     @SerializedName("strBirthLocation")
-    var strBirthLocation: String,
+    var strBirthLocation: String?,
     @SerializedName("strCollege")
     var strCollege: Any?,
     @SerializedName("strCreativeCommons")
@@ -85,7 +85,7 @@ data class PlayerItem(
     @SerializedName("strLocked")
     var strLocked: String,
     @SerializedName("strNationality")
-    var strNationality: String,
+    var strNationality: String?,
     @SerializedName("strNumber")
     var strNumber: String?,
     @SerializedName("strOutfitter")
@@ -103,7 +103,7 @@ data class PlayerItem(
     @SerializedName("strSport")
     var strSport: String,
     @SerializedName("strTeam")
-    var strTeam: String,
+    var strTeam: String?,
     @SerializedName("strTeamNational")
     var strTeamNational: Any?,
     @SerializedName("strThumb")

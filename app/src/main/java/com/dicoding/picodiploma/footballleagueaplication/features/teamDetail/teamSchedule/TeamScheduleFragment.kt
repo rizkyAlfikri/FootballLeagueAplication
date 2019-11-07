@@ -2,20 +2,21 @@ package com.dicoding.picodiploma.footballleagueaplication.features.teamDetail.te
 
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dicoding.picodiploma.footballleagueaplication.R
 import com.dicoding.picodiploma.footballleagueaplication.features.detailMatch.DetailMatchActivity
 import com.dicoding.picodiploma.footballleagueaplication.features.detailMatch.DetailMatchActivity.Companion.EXTRA_EVENT
 import com.dicoding.picodiploma.footballleagueaplication.models.lastMatchModel.LastMatchItem
 import com.dicoding.picodiploma.footballleagueaplication.models.nextMatchModel.NextMatchItem
-import com.dicoding.picodiploma.footballleagueaplication.networks.ApiRepository
+import com.dicoding.picodiploma.footballleagueaplication.repository.TeamScheduleRepository
+import com.dicoding.picodiploma.footballleagueaplication.utils.EspressoIdlingResource
 import com.dicoding.picodiploma.footballleagueaplication.utils.invisible
 import com.dicoding.picodiploma.footballleagueaplication.utils.visible
-import com.google.gson.Gson
+import com.dicoding.picodiploma.footballleagueaplication.viewHolder.ScheduleHolder
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.fragment_team_schedule.*
@@ -25,8 +26,8 @@ import org.jetbrains.anko.support.v4.toast
 
 class TeamScheduleFragment : Fragment(), TeamScheduleView {
 
-
     private val scheduleAdapter = GroupAdapter<ViewHolder>()
+    private var schedulePresenter: TeamSchedulePresenter? = null
 
     companion object {
 
@@ -62,9 +63,10 @@ class TeamScheduleFragment : Fragment(), TeamScheduleView {
 
         scheduleAdapter.clear()
 
-        val schedulePresenter = TeamSchedulePresenter(this, Gson(), ApiRepository())
-        schedulePresenter.getLastMatchData(idLeague, idTeam)
-        schedulePresenter.getNextMatchData(idLeague, idTeam)
+        EspressoIdlingResource.incrementIdle()
+        schedulePresenter = TeamSchedulePresenter(this, TeamScheduleRepository())
+        schedulePresenter?.getLastSchedule(idLeague, idTeam)
+        schedulePresenter?.getNextSchedule(idLeague, idTeam)
 
     }
 
@@ -76,12 +78,16 @@ class TeamScheduleFragment : Fragment(), TeamScheduleView {
         progress_bar?.invisible()
     }
 
-    override fun loadLastTeam(
+    override fun loadLastSchedule(
         listLastMatch: MutableList<LastMatchItem>,
         listLastBadgeHome: MutableList<String>,
         listLastBadgeAway: MutableList<String>,
-        listLastStadiumHome: MutableList<String?>
+        listLastStadium: MutableList<String?>
     ) {
+
+        if (!EspressoIdlingResource.idlingResource.isIdleNow) {
+            EspressoIdlingResource.decrementIdle()
+        }
 
         for (position in listLastMatch.indices) {
 
@@ -90,7 +96,7 @@ class TeamScheduleFragment : Fragment(), TeamScheduleView {
                     listLastMatch[position],
                     listLastBadgeHome[position],
                     listLastBadgeAway[position],
-                    listLastStadiumHome[position]
+                    listLastStadium[position]
                 ) {
                     it as LastMatchItem
                     startActivity<DetailMatchActivity>(EXTRA_EVENT to it.idEvent)
@@ -99,12 +105,16 @@ class TeamScheduleFragment : Fragment(), TeamScheduleView {
     }
 
 
-    override fun loadNextTeam(
+    override fun loadNextSchedule(
         listNextMatch: MutableList<NextMatchItem>,
         listNextBadgeHome: MutableList<String>,
         listNextBadgeAway: MutableList<String>,
-        listNextStadiumHome: MutableList<String?>
+        listNextStadium: MutableList<String?>
     ) {
+
+        if (!EspressoIdlingResource.idlingResource.isIdleNow) {
+            EspressoIdlingResource.decrementIdle()
+        }
 
         for (position in listNextMatch.indices) {
 
@@ -113,7 +123,7 @@ class TeamScheduleFragment : Fragment(), TeamScheduleView {
                     listNextMatch[position],
                     listNextBadgeHome[position],
                     listNextBadgeAway[position],
-                    listNextStadiumHome[position]
+                    listNextStadium[position]
                 ) {
                     it as NextMatchItem
                     startActivity<DetailMatchActivity>(EXTRA_EVENT to it.idEvent)
@@ -121,7 +131,16 @@ class TeamScheduleFragment : Fragment(), TeamScheduleView {
         }
     }
 
-    override fun onFailure(throwable: Throwable) {
-        toast(throwable.localizedMessage)
+    override fun onFailure(throwable: String) {
+        if (!EspressoIdlingResource.idlingResource.isIdleNow) {
+            EspressoIdlingResource.decrementIdle()
+        }
+
+        toast(throwable)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        schedulePresenter = null
     }
 }

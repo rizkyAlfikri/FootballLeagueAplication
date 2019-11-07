@@ -12,7 +12,8 @@ data class FavoritesModel(
     val homeScore: String?,
     val awayScore: String?,
     val homeBadge: String?,
-    val awayBadge: String
+    val awayBadge: String?,
+    val idLeague: String?
 ) {
 
     companion object {
@@ -25,9 +26,9 @@ data class FavoritesModel(
         const val AWAY_TEAM: String = "AWAY_TEAM"
         const val HOME_SCORE: String = "HOME_SCORE"
         const val AWAY_SCORE: String = "AWAY_SCORE"
-        const val HOME_BAGDE: String = "HOME_BADGE"
+        const val HOME_BADGE: String = "HOME_BADGE"
         const val AWAY_BADGE: String = "AWAY_BADGE"
-
+        const val ID_LEAGUE: String = "ID_LEAGUE"
     }
 
 }

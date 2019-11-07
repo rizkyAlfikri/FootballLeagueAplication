@@ -1,19 +1,15 @@
 package com.dicoding.picodiploma.footballleagueaplication.features.teamDetail.teamPlayer
 
 import com.dicoding.picodiploma.footballleagueaplication.models.playerModel.PlayerResponse
-import com.dicoding.picodiploma.footballleagueaplication.networks.ApiRepository
-import com.dicoding.picodiploma.footballleagueaplication.utils.TestContextProvider
-import com.google.gson.Gson
+import com.dicoding.picodiploma.footballleagueaplication.repository.RepositoryCallback
+import com.dicoding.picodiploma.footballleagueaplication.repository.TeamPlayerRepository
+import com.nhaarman.mockito_kotlin.argumentCaptor
+import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.verify
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
-import org.mockito.ArgumentMatchers
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
-import rx.schedulers.TestScheduler
 
 class TeamPlayerPresenterTest {
 
@@ -21,57 +17,51 @@ class TeamPlayerPresenterTest {
     private lateinit var view: TeamPlayerView
 
     @Mock
-    private lateinit var gson: Gson
-
-    @Mock
-    private lateinit var apiRepository: ApiRepository
+    private lateinit var playerRepository: TeamPlayerRepository
 
     @Mock
     private lateinit var playerResponse: PlayerResponse
-
-    @Mock
-    private lateinit var apiResponse: Deferred<String>
 
     private lateinit var teamPlayerPresenter: TeamPlayerPresenter
 
     @Before
     fun setup() {
         MockitoAnnotations.initMocks(this)
-        teamPlayerPresenter = TeamPlayerPresenter(view, gson, apiRepository, TestContextProvider())
+        teamPlayerPresenter = TeamPlayerPresenter(view, playerRepository)
     }
 
     @Test
-    fun getPlayerFromServer() {
+    fun getTeamPlayerSuccessTest() {
         val idTeam = "133604"
-        val teamFormation = mutableSetOf<String>()
+        val listTeamFormation = mutableSetOf<String>()
 
+        teamPlayerPresenter.getPlayerFromServer(idTeam)
 
-        runBlocking {
-            Mockito.`when`(apiRepository.doRequest(ArgumentMatchers.anyString()))
-                .thenReturn(apiResponse)
-
-            Mockito.`when`(apiResponse.await())
-                .thenReturn("")
-
-            Mockito.`when`(
-                gson.fromJson(
-                    "",
-                    PlayerResponse::class.java
-                )
-            ).thenReturn(playerResponse)
-
-            teamPlayerPresenter.getPlayerFromServer(idTeam)
-
-            val test = TestScheduler()
-            test.triggerActions()
-
-            playerResponse.player.map {
-                teamFormation.add(it.strPosition)
-            }
-
-            verify(view).showLoading()
-            verify(view).hideLoading()
-            verify(view).loadPlayerToView(teamFormation, playerResponse.player)
+        argumentCaptor<RepositoryCallback<PlayerResponse>>().apply {
+            verify(playerRepository).getTeamPlayer(eq(idTeam), capture())
+            firstValue.onDataLoaded(playerResponse)
         }
+
+        playerResponse.player.map {
+            listTeamFormation.add(it.strPosition)
+        }
+
+        verify(view).showLoading()
+        verify(view).hideLoading()
+        verify(view).loadPlayerToView(listTeamFormation, playerResponse.player)
+    }
+
+    @Test
+    fun getTeamPlayerErrorTest() {
+        teamPlayerPresenter.getPlayerFromServer("")
+
+        argumentCaptor<RepositoryCallback<PlayerResponse>>().apply {
+            verify(playerRepository).getTeamPlayer(eq(""), capture())
+            firstValue.onDataError("")
+        }
+
+        verify(view).showLoading()
+        verify(view).hideLoading()
+        verify(view).onFailure("")
     }
 }

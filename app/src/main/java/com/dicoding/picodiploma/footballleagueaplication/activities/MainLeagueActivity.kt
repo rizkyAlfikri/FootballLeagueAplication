@@ -17,6 +17,8 @@ import com.dicoding.picodiploma.footballleagueaplication.features.home.HomeFragm
 import com.dicoding.picodiploma.footballleagueaplication.features.teams.TeamsFragment
 import com.dicoding.picodiploma.footballleagueaplication.models.LeagueModel
 import com.dicoding.picodiploma.footballleagueaplication.features.searchMatch.SearchMatchActivity
+import com.dicoding.picodiploma.footballleagueaplication.features.searchMatch.SearchMatchActivity.Companion.EXTRA_LEAGUE
+import com.dicoding.picodiploma.footballleagueaplication.features.searchMatch.SearchMatchActivity.Companion.EXTRA_LEAGUE_NAME
 import com.dicoding.picodiploma.footballleagueaplication.features.searchMatch.SearchMatchActivity.Companion.EXTRA_SEARCH
 import kotlinx.android.synthetic.main.activity_main_league.*
 import kotlinx.android.synthetic.main.activity_main_league.search_view
@@ -29,46 +31,51 @@ class MainLeagueActivity : AppCompatActivity() {
     private lateinit var fragment: Fragment
 
     // key for save intent data from mainActivity
-    companion object{
+    companion object {
         const val EXTRA_ID_LEAGUE: String = "extra_league"
     }
 
     private lateinit var leagueModel: LeagueModel
 
     // initialize fragment in bottom navigation bar
-    private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
-        when (item.itemId) {
-            R.id.navigation_home -> {
-                fragment = HomeFragment.newInstance(leagueModel.leagueId)
-                supportFragmentManager.beginTransaction()
-                    .replace(frame_container.id, fragment, fragment.javaClass.simpleName).commit()
-                return@OnNavigationItemSelectedListener true
+    private val onNavigationItemSelectedListener =
+        BottomNavigationView.OnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.navigation_home -> {
+                    fragment = HomeFragment.newInstance(leagueModel.leagueId)
+                    supportFragmentManager.beginTransaction()
+                        .replace(frame_container.id, fragment, fragment.javaClass.simpleName)
+                        .commit()
+                    return@OnNavigationItemSelectedListener true
+                }
+                R.id.navigation_competitions -> {
+                    fragment = CompetitionsFragment.newInstance(leagueModel.leagueId)
+                    supportFragmentManager.beginTransaction()
+                        .replace(frame_container.id, fragment, fragment.javaClass.simpleName)
+                        .commit()
+                    return@OnNavigationItemSelectedListener true
+                }
+                R.id.navigation_favorites -> {
+                    fragment = FavoriteFragment.newInstance(leagueModel.leagueId)
+                    supportFragmentManager.beginTransaction()
+                        .replace(frame_container.id, fragment, fragment.javaClass.simpleName)
+                        .commit()
+                    return@OnNavigationItemSelectedListener true
+                }
+                R.id.navigation_teams -> {
+                    fragment = TeamsFragment.newInstance(leagueModel.leagueId, leagueModel.leagueName)
+                    supportFragmentManager.beginTransaction()
+                        .replace(frame_container.id, fragment, fragment.javaClass.simpleName)
+                        .commit()
+                    return@OnNavigationItemSelectedListener true
+                }
+                R.id.navigation_league -> {
+                    startActivity<MainActivity>()
+                    return@OnNavigationItemSelectedListener true
+                }
             }
-            R.id.navigation_competitions -> {
-                fragment = CompetitionsFragment.newInstance(leagueModel.leagueId)
-                supportFragmentManager.beginTransaction()
-                    .replace(frame_container.id, fragment, fragment.javaClass.simpleName).commit()
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.navigation_favorites -> {
-                fragment = FavoriteFragment()
-                supportFragmentManager.beginTransaction()
-                    .replace(frame_container.id, fragment, fragment.javaClass.simpleName).commit()
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.navigation_teams -> {
-                fragment = TeamsFragment.newInstance(leagueModel.leagueId)
-                supportFragmentManager.beginTransaction()
-                    .replace(frame_container.id, fragment, fragment.javaClass.simpleName).commit()
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.navigation_league -> {
-                startActivity<MainActivity>()
-                return@OnNavigationItemSelectedListener true
-            }
+            false
         }
-        false
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -112,7 +119,9 @@ class MainLeagueActivity : AppCompatActivity() {
 
                 // move current activity to search activity where query search as parameter
                 startActivity<SearchMatchActivity>(
-                    EXTRA_SEARCH to query
+                    EXTRA_SEARCH to query,
+                    EXTRA_LEAGUE to leagueModel.leagueId,
+                    EXTRA_LEAGUE_NAME to leagueModel.leagueName
                 )
                 return true
             }

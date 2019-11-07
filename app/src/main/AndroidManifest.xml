@@ -3,17 +3,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.dicoding.picodiploma.footballleagueaplication">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/ic_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".features.teamDetail.TeamDetailActivity"></activity>
+        <activity android:name=".features.searchteams.SearchTeamsActivity" />
+        <activity android:name=".features.playerdetail.PlayerDetailActivity" />
+        <activity android:name=".features.teamDetail.TeamDetailActivity" />
         <activity android:name=".features.searchMatch.SearchMatchActivity" />
         <activity
             android:name=".features.detailMatch.DetailMatchActivity"
@@ -22,7 +25,6 @@
         <activity
             android:name=".activities.MainLeagueActivity"
             android:label="@string/title_activity_main_league" />
-        <activity android:name=".activities.DetailActivity" />
         <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

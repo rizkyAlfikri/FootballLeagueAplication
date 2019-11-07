@@ -6,5 +6,5 @@ interface TeamPlayerView {
     fun showLoading()
     fun hideLoading()
     fun loadPlayerToView(dataFormation: Set<String>, dataPlayer: List<PlayerItem>)
-    fun onFailure(throwable: Throwable)
+    fun onFailure(throwable: String)
 }

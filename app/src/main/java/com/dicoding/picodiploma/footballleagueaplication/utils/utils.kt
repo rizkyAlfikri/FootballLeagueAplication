@@ -18,7 +18,6 @@ fun View.invisible() {
 // convert date to GMT + 7 format
 @SuppressLint("SimpleDateFormat")
 fun timeGMTFormat(time: String?): String? {
-
     val formatter = SimpleDateFormat("HH:mm:ss")
     formatter.timeZone = TimeZone.getTimeZone("UTC")
     val dateTime: String? = time
@@ -30,10 +29,29 @@ fun timeGMTFormat(time: String?): String? {
 // convert time to GMT + 7 format
 @SuppressLint("SimpleDateFormat")
 fun dateGMTFormat(date: String?): String? {
-
     val formatter = SimpleDateFormat("yyyy-MM-dd")
     formatter.timeZone = TimeZone.getTimeZone("GMT")
     val dates = formatter.parse(date)
     val sdf = SimpleDateFormat("EEEE, dd-MMM-yyyy")
     return sdf.format(dates)
+}
+
+@SuppressLint("SimpleDateFormat")
+fun datePlayerInfoFormat(date: String?): String? {
+    val formatter = SimpleDateFormat("yyyy-MM-dd")
+    formatter.timeZone = TimeZone.getTimeZone("GMT")
+    val dates = formatter.parse(date)
+    val sdf = SimpleDateFormat("dd-MMM-yyyy")
+    return sdf.format(dates)
+}
+
+@SuppressLint("SimpleDateFormat")
+fun ageConversion(date: String?): String? {
+    val today = Calendar.getInstance().time
+    val todaySdf = SimpleDateFormat("yyyy")
+    val yearToday = todaySdf.format(today)
+    val yearBorn = todaySdf.parse(date)
+    val yearBornResult = todaySdf.format(yearBorn)
+    val age = yearToday.toInt() - yearBornResult.toInt()
+    return "$age"
 }

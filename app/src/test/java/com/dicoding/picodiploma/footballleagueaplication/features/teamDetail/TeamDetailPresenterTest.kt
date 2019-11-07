@@ -1,73 +1,70 @@
 package com.dicoding.picodiploma.footballleagueaplication.features.teamDetail
 
+import com.dicoding.picodiploma.footballleagueaplication.models.TeamTableModel.Table
+import com.dicoding.picodiploma.footballleagueaplication.models.teamDetailModel.TeamDetailItem
 import com.dicoding.picodiploma.footballleagueaplication.models.teamDetailModel.TeamDetailResponse
-import com.dicoding.picodiploma.footballleagueaplication.networks.ApiRepository
-import com.dicoding.picodiploma.footballleagueaplication.utils.TestContextProvider
-import com.google.gson.Gson
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.runBlocking
-import org.junit.Test
-
+import com.dicoding.picodiploma.footballleagueaplication.repository.RepositoryCallback
+import com.dicoding.picodiploma.footballleagueaplication.repository.RepositoryCallbackTable
+import com.dicoding.picodiploma.footballleagueaplication.repository.TeamDetailRepository
+import com.nhaarman.mockito_kotlin.argumentCaptor
+import com.nhaarman.mockito_kotlin.eq
+import com.nhaarman.mockito_kotlin.verify
 import org.junit.Before
-import org.mockito.ArgumentMatchers
+import org.junit.Test
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
-import java.net.ConnectException
 
-class TeamDetailPresenterTest {
+class   TeamDetailPresenterTest {
 
     @Mock
     private lateinit var view: TeamDetailView
 
     @Mock
-    private lateinit var apiRepository: ApiRepository
-
-    @Mock
-    private lateinit var teamDetailResponse: TeamDetailResponse
-
-    @Mock
-    private lateinit var gson: Gson
-
-    @Mock
-    private lateinit var apiResponse: Deferred<String>
+    private lateinit var teamDetailRepository: TeamDetailRepository
 
     private lateinit var teamDetailPresenter: TeamDetailPresenter
 
     @Before
     fun setup() {
         MockitoAnnotations.initMocks(this)
-        teamDetailPresenter = TeamDetailPresenter(view, gson, apiRepository, TestContextProvider())
+        teamDetailPresenter = TeamDetailPresenter(view, teamDetailRepository)
     }
 
     @Test
-    fun getTeamDetailData() {
+    fun getTeamDetailSuccessTest() {
         val idTeam = "133604"
+        val idLeague = "4328"
+        val dataTable = mutableListOf<Table>()
+        val dataTeamBadge = mutableListOf<TeamDetailItem>()
+        val listTeamBadge = mutableListOf<TeamDetailItem>()
 
-        runBlocking {
-            Mockito.`when`(apiRepository.doRequest(ArgumentMatchers.anyString()))
-                .thenReturn(apiResponse)
+        teamDetailPresenter.getTeamDetailData(idTeam, idLeague)
 
-            Mockito.`when`(apiResponse.await())
-                .thenReturn("")
-
-            Mockito.`when`(
-                gson.fromJson(
-                    "",
-                    TeamDetailResponse::class.java
-                )
-            ).thenReturn(teamDetailResponse)
-
-            teamDetailPresenter.getTeamDetailData(idTeam)
-
-            Mockito.verify(view).showLoading()
-            Mockito.verify(view).hideLoading()
-
-            try {
-                Mockito.verify(view).loadToView(teamDetailResponse.teams)
-            } catch (e: ConnectException) {
-                Mockito.verify(view).onFailure(e)
-            }
+        argumentCaptor<RepositoryCallbackTable<List<Table>, List<TeamDetailItem>>>().apply {
+            verify(teamDetailRepository).getTeamDetail(eq(idTeam), eq(idLeague), capture())
+            firstValue.onDataLoaded(dataTable, dataTeamBadge)
         }
+
+        dataTeamBadge.map {
+            listTeamBadge
+        }
+
+        verify(view).showLoading()
+        verify(view).hideLoading()
+        verify(view).loadToView(dataTable, dataTeamBadge)
+    }
+
+    @Test
+    fun getTeamDetailErrorTest() {
+        teamDetailPresenter.getTeamDetailData("", "")
+
+        argumentCaptor<RepositoryCallbackTable<List<Table>, List<TeamDetailItem>>>().apply {
+            verify(teamDetailRepository).getTeamDetail(eq(""), eq(""), capture())
+            firstValue.onDataError("")
+        }
+
+        verify(view).showLoading()
+        verify(view).hideLoading()
+        verify(view).onFailure("")
     }
 }

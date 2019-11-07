@@ -1,108 +1,65 @@
 package com.dicoding.picodiploma.footballleagueaplication.features.nextMatch
 
-import com.dicoding.picodiploma.footballleagueaplication.networks.RetrofitService.createService
-import rx.Observable
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
+import android.annotation.SuppressLint
+import com.dicoding.picodiploma.footballleagueaplication.models.nextMatchModel.NextMatchItem
+import com.dicoding.picodiploma.footballleagueaplication.models.teamDetailModel.TeamDetailResponse
+import com.dicoding.picodiploma.footballleagueaplication.repository.NextMatchRepository
+import com.dicoding.picodiploma.footballleagueaplication.repository.RepositoryMultipleCallback
 
 class NextMatchPresenter(
-    private val view: NextMatchView
+    private val view: NextMatchView,
+    private val nextMatchRepository: NextMatchRepository
 ) {
 
+    @SuppressLint("CheckResult")
     fun getNextMatchData(idLeague: String?) {
-        val listHome = mutableListOf<String>()
-        val listAway = mutableListOf<String>()
-        val listStadium = mutableListOf<String?>()
-        val setDate = mutableSetOf<String>()
-        val apiService = createService()
+
+        val listNextMatchResult = mutableListOf<NextMatchItem>()
+        val listHomeResult = mutableListOf<String>()
+        val listAwayResult = mutableListOf<String>()
+        val listStadiumResult = mutableListOf<String?>()
+        val setDateResult = mutableSetOf<String>()
 
         view.showLoading()
 
+        nextMatchRepository.getNextMatchData(
+            idLeague,
+            object : RepositoryMultipleCallback<Set<NextMatchItem>, List<TeamDetailResponse>> {
+                override fun onDataLoaded(
+                    dataMatch: Set<NextMatchItem>,
+                    dataHomeBadge: List<TeamDetailResponse>,
+                    dataAwayBadge: List<TeamDetailResponse>
+                ) {
 
-//        apiService.getNextMatch(idLeague)
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .flatMap { Observable.from(it.events) }
-//            .flatMap {itNext ->
-//                Observable.zip(
-//                    apiService.getTeamDetailFromServer(itNext.idHomeTeam),
-//                    apiService.getTeamDetailFromServer(itNext.idAwayTeam)
-//                ) { homeTeam: TeamDetailResponse, awayTeam: TeamDetailResponse ->
-//                    listHome.add(homeTeam.teams[0].strTeamBadge)
-//                    listAway.add(awayTeam.teams[0].strTeamBadge)
-//                    listNext.add(itNext)
-//                    setDate.add(itNext.dateEvent)
-//                    listStadium.add(homeTeam.teams[0].strStadium)
-//                }
-//            }.doOnCompleted {
-//                view.loadDataToView(listNext, listHome, listAway, listStadium, setDate )
-//                view.hideLoading()
-//            }
+                    view.hideLoading()
 
-
-        apiService.getNextMatch(idLeague)
-            .flatMap { Observable.from(it.events) }
-            .flatMap { apiService.getTeamDetailFromServer(it.idHomeTeam) }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnCompleted {
-                view.loadHomeTeam(listHome, listStadium)
-            }
-            .subscribe(
-                { it ->
-                    if (it != null) {
-                        it.teams.map {
-                            listHome.add(it.strTeamBadge)
-                            listStadium.add(it.strStadium)
-                        }
-                    } else {
-                        view.onFailure("Team Home Badge Null")
+                    dataMatch.map {
+                        listNextMatchResult.add(it)
+                        setDateResult.add(it.dateEvent)
                     }
-                }, {
-                    view.onFailure("Team Home Badge Connection error")
-                }
-            )
 
-        apiService.getNextMatch(idLeague)
-            .flatMap { itResponse -> Observable.from(itResponse.events) }
-            .flatMap { itNext ->
-                apiService.getTeamDetailFromServer(itNext.idAwayTeam)
-            }.subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnCompleted {
-                view.loadAwayTeam(listAway)
-            }
-            .subscribe({ it ->
-                if (it != null) {
-                    it.teams.map {
-                        listAway.add(it.strTeamBadge)
+                    dataHomeBadge.map {
+                        listHomeResult.add(it.teams[0].strTeamBadge)
+                        listStadiumResult.add(it.teams[0].strStadium)
                     }
-                } else {
-                    view.onFailure("Team Away Badge Null")
-                }
-            },
-                {
-                    view.onFailure("Team Away Badge Connection Error")
-                })
 
-
-
-        apiService.getNextMatch(idLeague)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .doOnCompleted { view.hideLoading() }
-            .subscribe({ it ->
-                if (it != null) {
-                    it.events.map {
-                        setDate.add(it.dateEvent)
+                    dataAwayBadge.map {
+                        listAwayResult.add(it.teams[0].strTeamBadge)
                     }
-                    view.loadDataToView(it.events, setDate)
-                } else {
-                    view.onFailure("Next match data is null")
+
+                    view.loadNextMatchData(
+                        listNextMatchResult,
+                        listHomeResult,
+                        listAwayResult,
+                        listStadiumResult,
+                        setDateResult
+                    )
                 }
-            },
-                {
-                    view.onFailure("Connection error")
-                })
+
+                override fun onDataError(throwable: String) {
+                    view.hideLoading()
+                    view.onFailure(throwable)
+                }
+            })
     }
 }

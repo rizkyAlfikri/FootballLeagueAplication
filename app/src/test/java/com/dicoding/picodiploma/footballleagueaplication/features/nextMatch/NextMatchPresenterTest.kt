@@ -1,23 +1,17 @@
 package com.dicoding.picodiploma.footballleagueaplication.features.nextMatch
 
+
 import com.dicoding.picodiploma.footballleagueaplication.models.nextMatchModel.NextMatchItem
-import com.dicoding.picodiploma.footballleagueaplication.models.nextMatchModel.NextMatchResponse
-import com.dicoding.picodiploma.footballleagueaplication.models.teamDetailModel.TeamDetailItem
 import com.dicoding.picodiploma.footballleagueaplication.models.teamDetailModel.TeamDetailResponse
-import com.dicoding.picodiploma.footballleagueaplication.networks.ApiRepository
-import com.dicoding.picodiploma.footballleagueaplication.utils.TestContextProvider
-import com.google.gson.Gson
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.runBlocking
-import org.junit.Test
-
-
+import com.dicoding.picodiploma.footballleagueaplication.repository.NextMatchRepository
+import com.dicoding.picodiploma.footballleagueaplication.repository.RepositoryMultipleCallback
+import com.nhaarman.mockito_kotlin.argumentCaptor
+import com.nhaarman.mockito_kotlin.eq
+import com.nhaarman.mockito_kotlin.verify
 import org.junit.Before
-import org.mockito.ArgumentMatchers
+import org.junit.Test
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
-import java.net.ConnectException
 
 class NextMatchPresenterTest {
 
@@ -25,89 +19,74 @@ class NextMatchPresenterTest {
     private lateinit var view: NextMatchView
 
     @Mock
-    private lateinit var gson: Gson
-
-    @Mock
-    private lateinit var apiRepository: ApiRepository
-
-    @Mock
-    private lateinit var apiResponse: Deferred<String>
+    private lateinit var nextMatchRepository: NextMatchRepository
 
     private lateinit var nextPresenter: NextMatchPresenter
+
+    private val idLeague = "4328"
 
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        nextPresenter = NextMatchPresenter(view, gson, apiRepository, TestContextProvider())
+        nextPresenter = NextMatchPresenter(view, nextMatchRepository)
 
     }
 
     @Test
-    fun getNextMatchData() {
-        val listNextMatch = mutableListOf<NextMatchItem>()
-        val listTeamHome = mutableListOf<TeamDetailItem>()
-        val listTeamAway = mutableListOf<TeamDetailItem>()
-        val nextResponse = NextMatchResponse(listNextMatch)
-        val homeNextResponse = TeamDetailResponse(listTeamHome)
-        val awayNextResponse = TeamDetailResponse(listTeamAway)
-        val idLeague = "4328"
+    fun getNextMatchDataSuccessTest() {
+        val dataNextMatch = mutableSetOf<NextMatchItem>()
+        val dataHomeBadge = mutableListOf<TeamDetailResponse>()
+        val dataAwayBadge = mutableListOf<TeamDetailResponse>()
 
-        runBlocking {
-            Mockito.`when`(apiRepository.doRequest(ArgumentMatchers.anyString()))
-                .thenReturn(apiResponse)
-            Mockito.`when`(apiResponse.await()).thenReturn("")
+        val listNextMatchResult = mutableListOf<NextMatchItem>()
+        val listHomeResult = mutableListOf<String>()
+        val listAwayResult = mutableListOf<String>()
+        val listStadiumResult = mutableListOf<String?>()
+        val setDateResult = mutableSetOf<String>()
 
-            Mockito.`when`(
-                gson.fromJson(
-                    "",
-                    NextMatchResponse::class.java
-                )
-            ).thenReturn(nextResponse)
+        nextPresenter.getNextMatchData(idLeague)
 
-            Mockito.`when`(
-                gson.fromJson(
-                    "",
-                    TeamDetailResponse::class.java
-                )
-            ).thenReturn(homeNextResponse)
-
-            Mockito.`when`(
-                gson.fromJson(
-                    "",
-                    TeamDetailResponse::class.java
-                )
-            ).thenReturn(awayNextResponse)
-
-
-            val listHomeBadge = mutableListOf<String>()
-            val listAwayBadge = mutableListOf<String>()
-            val listStadium = mutableListOf<String?>()
-            val setDate = mutableSetOf<String>()
-
-            homeNextResponse.teams.map {
-                listHomeBadge.add(it.strTeamBadge)
-                listStadium.add(it.strStadium)
-            }
-
-            awayNextResponse.teams.map {
-                listAwayBadge.add(it.strTeamBadge)
-            }
-
-            nextResponse.events.map {
-                setDate.add(it.dateEvent)
-            }
-
-            nextPresenter.getNextMatchData(idLeague)
-
-            try {
-                Mockito.verify(view).showLoading()
-                Mockito.verify(view)
-                    .loadDataToView(nextResponse.events, listHomeBadge, listAwayBadge, listStadium, setDate)
-                Mockito.verify(view).hideLoading()
-            } catch (e: ConnectException) {
-                Mockito.verify(view).onFailure(e)
-            }
+        argumentCaptor<RepositoryMultipleCallback<Set<NextMatchItem>, List<TeamDetailResponse>>>().apply {
+            verify(nextMatchRepository).getNextMatchData(eq(idLeague), capture())
+            firstValue.onDataLoaded(dataNextMatch, dataHomeBadge, dataAwayBadge)
         }
 
+        dataNextMatch.map {
+            listNextMatchResult.add(it)
+            setDateResult.add(it.dateEvent)
+        }
+
+        dataHomeBadge.map {
+            listHomeResult.add(it.teams[0].strTeamBadge)
+            listStadiumResult.add(it.teams[0].strStadium)
+        }
+
+        dataAwayBadge.map {
+            listAwayResult.add(it.teams[0].strTeamBadge)
+        }
+
+        verify(view).showLoading()
+        verify(view).hideLoading()
+        verify(view).loadNextMatchData(
+            listNextMatchResult,
+            listHomeResult,
+            listAwayResult,
+            listStadiumResult,
+            setDateResult
+        )
+    }
+
+    @Test
+    fun getNextMatchDataErrorTest() {
+        nextPresenter.getNextMatchData("")
+
+        argumentCaptor<RepositoryMultipleCallback<Set<NextMatchItem>, List<TeamDetailResponse>>>().apply {
+            verify(nextMatchRepository).getNextMatchData(eq(""), capture())
+            firstValue.onDataError("")
+        }
+
+        verify(view).showLoading()
+        verify(view).hideLoading()
+        verify(view).onFailure("")
     }
 }

@@ -2,78 +2,55 @@ package com.dicoding.picodiploma.footballleagueaplication.features.detailMatch
 
 import com.dicoding.picodiploma.footballleagueaplication.models.matchDetailModel.MatchDetailResponse
 import com.dicoding.picodiploma.footballleagueaplication.models.teamDetailModel.TeamDetailResponse
-import com.dicoding.picodiploma.footballleagueaplication.networks.ApiRepository
-import com.dicoding.picodiploma.footballleagueaplication.networks.TheSportDb
-import com.dicoding.picodiploma.footballleagueaplication.utils.CoroutineContextProvider
-import com.google.gson.Gson
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import java.lang.NullPointerException
-import java.net.ConnectException
+import com.dicoding.picodiploma.footballleagueaplication.repository.DetailMatchRepository
+import com.dicoding.picodiploma.footballleagueaplication.repository.RepositoryCallback
 
 class DetailMatchPresenter(
     private val view: DetailMatchView,
-    private val gson: Gson,
-    private val apiRepository: ApiRepository,
-    private val context: CoroutineContextProvider = CoroutineContextProvider()
+    private val detailMatchRepository: DetailMatchRepository
 ) {
 
     fun getDetailMatchData(idEvent: String?) {
         view.showLoading()
 
-        GlobalScope.launch(context.main) {
-
-            // get data from server
-            val data = gson.fromJson(
-                apiRepository.doRequest(TheSportDb.getDetailMatch(idEvent)).await(),
-                MatchDetailResponse::class.java
-            )
-
-            var idHome = ""
-            var idAway = ""
-
-            data.events.forEach {
-
-                idHome = it.idHomeTeam
-                idAway = it.idAwayTeam
-
-            }
-
-            // get image badger team home from server
-            val homeBadgeData = gson.fromJson(
-                apiRepository.doRequest(TheSportDb.getTeamDetail(idHome)).await(),
-                TeamDetailResponse::class.java
-            )
-
-            // get image badger team away from server
-            val awayBadgeData = gson.fromJson(
-                apiRepository.doRequest(TheSportDb.getTeamDetail(idAway)).await(),
-                TeamDetailResponse::class.java
-            )
-
-            var homeBadge = ""
-            var awayBadge = ""
-
-            homeBadgeData.teams.forEach {
-                homeBadge = it.strTeamBadge
-            }
-
-            awayBadgeData.teams.forEach {
-                awayBadge = it.strTeamBadge
-            }
-
-            view.hideLoading()
-
-            try {
-                // load data to activity
+        detailMatchRepository.getDetailMatch(idEvent, object: RepositoryCallback<MatchDetailResponse> {
+            override fun onDataLoaded(data: MatchDetailResponse) {
                 view.loadDataToView(data.events)
-                view.loadHomeBadgeToView(homeBadge)
-                view.loadAwayBadgeToView(awayBadge)
-            } catch (e: NullPointerException) {
-                view.onFailure(e)
-            } catch (e: ConnectException) {
-                view.onFailure(e)
+                view.hideLoading()
             }
-        }
+
+            override fun onDataError(throwable: String) {
+                view.onFailure(throwable)
+                view.hideLoading()
+            }
+        })
+
+        detailMatchRepository.getHomeTeamBadge(idEvent, object: RepositoryCallback<TeamDetailResponse> {
+            override fun onDataLoaded(data: TeamDetailResponse) {
+                data.teams.map {
+                    view.loadHomeBadgeToView(it.strTeamBadge)
+                }
+                view.hideLoading()
+            }
+
+            override fun onDataError(throwable: String) {
+                view.onFailure(throwable)
+                view.hideLoading()
+            }
+        })
+
+        detailMatchRepository.getAwayTeamBadge(idEvent, object: RepositoryCallback<TeamDetailResponse> {
+            override fun onDataLoaded(data: TeamDetailResponse) {
+                data.teams.map {
+                    view.loadAwayBadgeToView(it.strTeamBadge)
+                }
+                view.hideLoading()
+            }
+
+            override fun onDataError(throwable: String) {
+                view.onFailure(throwable)
+                view.hideLoading()
+            }
+        })
     }
 }

@@ -6,7 +6,7 @@ interface LeagueDetailView {
     fun showLoading()
     fun hideLoading()
     fun loadDataToView(listData: LeagueDetailResponse)
-//    fun loadBannerToView(listBanner: MutableList<String>)
-    fun onFailure(throwable: Throwable)
+    fun loadBannerToView(listBanner: MutableList<String>)
+    fun onFailure(throwable: String)
 
 }

@@ -1,84 +1,57 @@
 package com.dicoding.picodiploma.footballleagueaplication.features.searchMatch
 
 import com.dicoding.picodiploma.footballleagueaplication.models.searchMatchModel.SearchMatchItem
-import com.dicoding.picodiploma.footballleagueaplication.models.searchMatchModel.SearchMatchResponse
 import com.dicoding.picodiploma.footballleagueaplication.models.teamDetailModel.TeamDetailResponse
-import com.dicoding.picodiploma.footballleagueaplication.networks.ApiRepository
-import com.dicoding.picodiploma.footballleagueaplication.networks.TheSportDb
-import com.dicoding.picodiploma.footballleagueaplication.utils.CoroutineContextProvider
-import com.google.gson.Gson
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import retrofit2.HttpException
-import kotlin.NullPointerException
+import com.dicoding.picodiploma.footballleagueaplication.repository.RepositoryMultipleCallback
+import com.dicoding.picodiploma.footballleagueaplication.repository.SearchMatchRepository
 
 class SearchMatchPresenter(
     private val view: SearchMatchView,
-    private val gson: Gson,
-    private val apiRepository: ApiRepository,
-    private val context: CoroutineContextProvider = CoroutineContextProvider()
+    private val searchMatchRepository: SearchMatchRepository
 ) {
 
     fun getSearchMatchData(query: String?) {
-        val listHome = mutableListOf<String>()
-        val listAway = mutableListOf<String>()
-        val listData = mutableListOf<SearchMatchItem>()
-        val listStadium = mutableListOf<String?>()
+        val listSearchMatchResult = mutableListOf<SearchMatchItem>()
+        val listHomeResult = mutableListOf<String>()
+        val listAwayResult = mutableListOf<String>()
+        val listStadiumResult = mutableListOf<String?>()
 
         view.showLoading()
 
-        GlobalScope.launch(context.main) {
+        searchMatchRepository.getSearchMatchData(
+            query,
+            object : RepositoryMultipleCallback<Set<SearchMatchItem>, List<TeamDetailResponse>> {
+                override fun onDataLoaded(
+                    dataMatch: Set<SearchMatchItem>,
+                    dataHomeBadge: List<TeamDetailResponse>,
+                    dataAwayBadge: List<TeamDetailResponse>
+                ) {
+                    view.hideLoading()
 
-            // get search match data from server
-            val data = gson.fromJson(
-                apiRepository
-                    .doRequest(TheSportDb.getSearchMatch(query)).await(),
-                SearchMatchResponse::class.java
-            )
+                    listSearchMatchResult.addAll(dataMatch)
 
-            // filter data, where data corresponding to Soccer will be add in collection list
-            listData.clear()
-            for (position in data.event.indices) {
-                if (data.event[position].strSport == "Soccer") {
-                    listData.add(data.event[position])
+                    dataHomeBadge.map {
+                        listHomeResult.add(it.teams[0].strTeamBadge)
+                        listStadiumResult.add(it.teams[0].strStadium)
+                    }
+
+                    dataAwayBadge.map {
+                        listAwayResult.add(it.teams[0].strTeamBadge)
+                    }
+
+                    view.loadSearchDataToView(
+                        listSearchMatchResult,
+                        listHomeResult,
+                        listAwayResult,
+                        listStadiumResult
+                    )
                 }
-            }
 
-            listHome.clear()
-            listAway.clear()
-            listStadium.clear()
-            for (position in listData.indices) {
+                override fun onDataError(throwable: String) {
+                    view.hideLoading()
+                    view.onFailure(throwable)
+                }
+            })
 
-                // get image badget home team from server
-                val dataHome = gson.fromJson(
-                    apiRepository
-                        .doRequest(TheSportDb.getTeamDetail(data.event[position].idHomeTeam)).await(),
-                    TeamDetailResponse::class.java
-                )
-
-                // get image badget home team from server
-                val dataAway = gson.fromJson(
-                    apiRepository
-                        .doRequest(TheSportDb.getTeamDetail(data.event[position].idAwayTeam)).await(),
-                    TeamDetailResponse::class.java
-                )
-
-                listHome.add(dataHome.teams[0].strTeamBadge)
-                listAway.add(dataAway.teams[0].strTeamBadge)
-                listStadium.add(dataHome.teams[0].strStadium)
-
-            }
-
-
-            view.hideLoading()
-            try {
-                // load data to search activity
-                view.loadDataToView(listData, listHome, listAway, listStadium)
-            } catch (e: HttpException) {
-                view.onFailure(e)
-            } catch (e: NullPointerException) {
-                view.onFailure(e)
-            }
-        }
     }
 }

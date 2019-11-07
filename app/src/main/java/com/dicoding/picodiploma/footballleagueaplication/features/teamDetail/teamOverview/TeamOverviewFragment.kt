@@ -1,7 +1,6 @@
 package com.dicoding.picodiploma.footballleagueaplication.features.teamDetail.teamOverview
 
 
-import android.annotation.SuppressLint
 import android.graphics.Typeface
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -13,10 +12,10 @@ import com.bumptech.glide.Glide
 import com.dicoding.picodiploma.footballleagueaplication.R
 import com.dicoding.picodiploma.footballleagueaplication.models.TeamTableModel.Table
 import com.dicoding.picodiploma.footballleagueaplication.models.teamDetailModel.TeamDetailItem
-import com.dicoding.picodiploma.footballleagueaplication.networks.ApiRepository
+import com.dicoding.picodiploma.footballleagueaplication.repository.TeamOverviewRepository
+import com.dicoding.picodiploma.footballleagueaplication.utils.EspressoIdlingResource
 import com.dicoding.picodiploma.footballleagueaplication.utils.invisible
 import com.dicoding.picodiploma.footballleagueaplication.utils.visible
-import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_team_overview.*
 import lecho.lib.hellocharts.model.PieChartData
 import lecho.lib.hellocharts.model.SliceValue
@@ -26,6 +25,7 @@ import org.jetbrains.anko.support.v4.toast
 class TeamOverviewFragment : Fragment(), TeamOverviewView {
 
     private val tableList = mutableListOf<SliceValue>()
+    private var overviewPresenter: TeamOverviewPresenter? = null
 
     companion object {
         fun newInstance(idLeague: String, idTeam: String): TeamOverviewFragment {
@@ -52,8 +52,12 @@ class TeamOverviewFragment : Fragment(), TeamOverviewView {
         val idLeague = arguments?.getString("idLeague")
         val idTeam = arguments?.getString("idTeam")
 
-        val overviewPresenter = TeamOverviewPresenter(this, Gson(), ApiRepository())
-        overviewPresenter.getTeamOverviewData(idLeague, "1920", idTeam)
+
+        EspressoIdlingResource.incrementIdle()
+
+        overviewPresenter = TeamOverviewPresenter(this, TeamOverviewRepository())
+        overviewPresenter?.getTeamOverviewData(idLeague, idTeam)
+
     }
 
     override fun showLoading() {
@@ -64,20 +68,18 @@ class TeamOverviewFragment : Fragment(), TeamOverviewView {
         progress_bar?.invisible()
     }
 
-    @SuppressLint("SetTextI18n")
-    override fun loadTeamDetailToView(teamDetailData: List<TeamDetailItem>?) {
-
-        teamDetailData?.let {
-            it[0].apply {
-                txt_stadium.text = strStadium ?: "-"
-                txt_capacity.text = "Capacity: $intStadiumCapacity peoples"
-                Glide.with(this@TeamOverviewFragment).load(strStadiumThumb).into(img_stadium)
-                Glide.with(requireContext()).load(strTeamJersey).into(img_jersey)
-            }
+    override fun loadTeamOverviewToView(
+        teamTableData: List<Table>,
+        teamDetailData: List<TeamDetailItem>
+    ) {
+        teamDetailData[0].apply {
+            val stadiumCapacity = "Capacity: $intStadiumCapacity peoples"
+            txt_stadium.text = strStadium ?: "-"
+            txt_capacity.text = stadiumCapacity
+            Glide.with(this@TeamOverviewFragment).load(strStadiumThumb).into(img_stadium)
+            Glide.with(requireContext()).load(strTeamJersey).into(img_jersey)
         }
-    }
 
-    override fun loadTeamTableToView(teamTableData: List<Table>) {
         val pieChartData = PieChartData(tableList)
         tableList.clear()
 
@@ -108,15 +110,28 @@ class TeamOverviewFragment : Fragment(), TeamOverviewView {
             pieChartData.setHasCenterCircle(true).centerText1 = "${teamTableData[0].played} Matches"
             pieChartData.centerText1FontSize = 14
             pieChartData.centerText1Typeface = Typeface.DEFAULT_BOLD
-            pieChartData.centerText1Color = ContextCompat.getColor(requireContext(), R.color.primary_text)
+            pieChartData.centerText1Color =
+                ContextCompat.getColor(requireContext(), R.color.primary_text)
         }
 
         chart.pieChartData = pieChartData
 
+        if (!EspressoIdlingResource.idlingResource.isIdleNow) {
+            EspressoIdlingResource.decrementIdle()
+        }
 
     }
 
-    override fun onFailure(throwable: Throwable?) {
-        toast("${throwable?.localizedMessage}")
+    override fun onFailure(throwable: String) {
+        toast(throwable)
+
+        if (!EspressoIdlingResource.idlingResource.isIdleNow) {
+            EspressoIdlingResource.decrementIdle()
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        overviewPresenter = null
     }
 }

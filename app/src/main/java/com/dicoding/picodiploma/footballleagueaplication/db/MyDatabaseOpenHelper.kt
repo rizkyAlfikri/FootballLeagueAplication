@@ -30,14 +30,31 @@ class MyDatabaseOpenHelper(context: Context) : ManagedSQLiteOpenHelper(context, 
             FavoritesModel.AWAY_TEAM to TEXT,
             FavoritesModel.HOME_SCORE to TEXT,
             FavoritesModel.AWAY_SCORE to TEXT,
-            FavoritesModel.HOME_BAGDE to TEXT,
-            FavoritesModel.AWAY_BADGE to TEXT
+            FavoritesModel.HOME_BADGE to TEXT,
+            FavoritesModel.AWAY_BADGE to TEXT,
+            FavoritesModel.ID_LEAGUE to TEXT
+
+
+        )
+
+        db.createTable(
+            FavoriteTeamModel.TABLE_TEAM_FAVORITE, true,
+            FavoriteTeamModel.ID to INTEGER + PRIMARY_KEY + AUTOINCREMENT,
+            FavoriteTeamModel.ID_TEAM to TEXT + UNIQUE,
+            FavoriteTeamModel.ID_LEAGUE to TEXT,
+            FavoriteTeamModel.TEAM_NAME to TEXT,
+            FavoriteTeamModel.LEAGUE_NAME to TEXT,
+            FavoriteTeamModel.TEAM_BADGE to TEXT,
+            FavoriteTeamModel.WIN_TEAM to INTEGER,
+            FavoriteTeamModel.DRAW_TEAM to INTEGER,
+            FavoriteTeamModel.LOST_TEAM to INTEGER
         )
     }
 
     // upgrade database version if needed
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         db.dropTable(FavoritesModel.TABLE_FAVORITE, true)
+        db.dropTable(FavoriteTeamModel.TABLE_TEAM_FAVORITE, true)
     }
 }
 

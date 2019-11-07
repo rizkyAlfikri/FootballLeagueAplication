@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".features.standingsleague.StandingsLeagueFragment">
+
+
+    <TextView
+        android:id="@+id/txt_team"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textColor="@color/primary_text"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="@string/teams" />
+
+    <TextView
+        android:id="@+id/txt_played"
+        android:layout_width="24dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textColor="@color/primary_text"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/txt_goal_for"
+        app:layout_constraintEnd_toStartOf="@+id/txt_goal_for"
+        app:layout_constraintTop_toTopOf="@+id/txt_goal_for"
+        android:text="@string/p" />
+
+    <TextView
+        android:id="@+id/txt_goal_for"
+        android:layout_width="24dp"
+        android:textStyle="bold"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:gravity="center"
+        android:textColor="@color/primary_text"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/txt_goal_against"
+        app:layout_constraintEnd_toStartOf="@+id/txt_goal_against"
+        app:layout_constraintTop_toTopOf="@+id/txt_goal_against"
+        android:text="@string/gf" />
+
+    <TextView
+        android:id="@+id/txt_goal_against"
+        android:layout_width="24dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textColor="@color/primary_text"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/txt_goal_difference"
+        app:layout_constraintEnd_toStartOf="@+id/txt_goal_difference"
+        app:layout_constraintTop_toTopOf="@+id/txt_goal_difference"
+        android:text="@string/ga" />
+
+    <TextView
+        android:id="@+id/txt_goal_difference"
+        android:layout_width="24dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textColor="@color/primary_text"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/txt_win"
+        app:layout_constraintEnd_toStartOf="@+id/txt_win"
+        app:layout_constraintTop_toTopOf="@+id/txt_win"
+        android:text="@string/gd" />
+
+    <TextView
+        android:id="@+id/txt_win"
+        android:layout_width="24dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:gravity="center"
+        android:textColor="@color/primary_text"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/txt_draw"
+        app:layout_constraintEnd_toStartOf="@+id/txt_draw"
+        app:layout_constraintTop_toTopOf="@+id/txt_draw"
+        android:text="@string/w" />
+
+    <TextView
+        android:id="@+id/txt_draw"
+        android:layout_width="24dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textColor="@color/primary_text"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/txt_loss"
+        app:layout_constraintEnd_toStartOf="@+id/txt_loss"
+        app:layout_constraintTop_toTopOf="@+id/txt_loss"
+        android:text="@string/d" />
+
+    <TextView
+        android:id="@+id/txt_loss"
+        android:layout_width="24dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textColor="@color/primary_text"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/txt_total"
+        app:layout_constraintEnd_toStartOf="@+id/txt_total"
+        app:layout_constraintTop_toTopOf="@+id/txt_total"
+        android:text="@string/l" />
+
+    <TextView
+        android:id="@+id/txt_total"
+        android:layout_width="24dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textColor="@color/primary_text"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/txt_team"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/txt_team"
+        android:text="@string/t" />
+
+    <View
+        android:id="@+id/view7"
+        style="@style/AppTheme.view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_team" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_standings"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="100dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view7"
+        app:layout_constraintVertical_bias="0.0"
+        tools:listitem="@layout/standing_table_item" />
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

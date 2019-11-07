@@ -1,10 +1,9 @@
 package com.dicoding.picodiploma.footballleagueaplication.features.detailMatch
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -15,12 +14,10 @@ import com.dicoding.picodiploma.footballleagueaplication.features.teamDetail.Tea
 import com.dicoding.picodiploma.footballleagueaplication.features.teamDetail.TeamDetailActivity.Companion.EXTRA_LEAGUE
 import com.dicoding.picodiploma.footballleagueaplication.features.teamDetail.TeamDetailActivity.Companion.EXTRA_TEAM
 import com.dicoding.picodiploma.footballleagueaplication.models.matchDetailModel.MatchDetailItem
-import com.dicoding.picodiploma.footballleagueaplication.networks.ApiRepository
-import com.dicoding.picodiploma.footballleagueaplication.utils.dateGMTFormat
-import com.dicoding.picodiploma.footballleagueaplication.utils.invisible
-import com.dicoding.picodiploma.footballleagueaplication.utils.timeGMTFormat
-import com.dicoding.picodiploma.footballleagueaplication.utils.visible
-import com.google.gson.Gson
+import com.dicoding.picodiploma.footballleagueaplication.repository.DetailMatchRepository
+import com.dicoding.picodiploma.footballleagueaplication.utils.*
+import com.dicoding.picodiploma.footballleagueaplication.viewHolder.DetailMatchHolder
+import com.dicoding.picodiploma.footballleagueaplication.viewHolder.DetailMatchTeamHolder
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.Section
 import com.xwray.groupie.ViewHolder
@@ -67,11 +64,10 @@ class DetailMatchActivity : AppCompatActivity(), DetailMatchView {
             adapter = detailMatchAdapter
         }
 
-
+        EspressoIdlingResource.incrementIdle()
         // initialize presenter and run method for fetch data from server
-        detailMatchPresenter = DetailMatchPresenter(this, Gson(), ApiRepository())
+        detailMatchPresenter = DetailMatchPresenter(this, DetailMatchRepository())
         detailMatchPresenter.getDetailMatchData(idEvent)
-
 
         collapsing_toolbar.setCollapsedTitleTextColor(ContextCompat.getColor(this, android.R.color.white))
         collapsing_toolbar.setExpandedTitleColor(ContextCompat.getColor(this, android.R.color.transparent))
@@ -102,21 +98,20 @@ class DetailMatchActivity : AppCompatActivity(), DetailMatchView {
         }
 
         // load data to view
-        listData[0].apply {
-            txt_home.text = strHomeTeam
-            txt_away.text = strAwayTeam
-            txt_date.text = dateGMTFormat(dateEvent)
-            txt_time.text = timeGMTFormat(strTime)
-            txt_score_home.text = intHomeScore ?: "-"
-            txt_score_away.text = intAwayScore ?: "-"
-            txt_goal_home.text = strHomeGoalDetails?.replace(oldValue = ";", newValue = "\n") ?: ""
-            txt_goal_away.text = strAwayGoalDetails?.replace(oldValue = ";", newValue = "\n") ?: ""
+        listData.map {
+            txt_home.text = it.strHomeTeam
+            txt_away.text = it.strAwayTeam
+            txt_date.text = dateGMTFormat(it.dateEvent)
+            txt_time.text = timeGMTFormat(it.strTime)
+            txt_score_home.text = it.intHomeScore ?: "-"
+            txt_score_away.text = it.intAwayScore ?: "-"
+            txt_goal_home.text = it.strHomeGoalDetails?.replace(oldValue = ";", newValue = "\n") ?: ""
+            txt_goal_away.text = it.strAwayGoalDetails?.replace(oldValue = ";", newValue = "\n") ?: ""
         }
 
         listTeam = mutableListOf()
         listTeam.clear()
         listTeam.addAll(listData)
-
 
         img_home.setOnClickListener {
             startActivity<TeamDetailActivity>(
@@ -139,8 +134,11 @@ class DetailMatchActivity : AppCompatActivity(), DetailMatchView {
         // load image badge team home to view
         Glide.with(this).load(urlHomeBadge).into(img_home)
 
-
         urlBadgeHome = urlHomeBadge
+
+        if (!EspressoIdlingResource.idlingResource.isIdleNow) {
+            EspressoIdlingResource.decrementIdle()
+        }
     }
 
     override fun loadAwayBadgeToView(urlAwayBadge: String) {
@@ -148,11 +146,19 @@ class DetailMatchActivity : AppCompatActivity(), DetailMatchView {
         Glide.with(this).load(urlAwayBadge).into(img_away)
 
         urlBadgeAway = urlAwayBadge
+
+        if (!EspressoIdlingResource.idlingResource.isIdleNow) {
+            EspressoIdlingResource.decrementIdle()
+        }
     }
 
-    override fun onFailure(throwable: Throwable) {
+    override fun onFailure(throwable: String) {
         // handling error when data failure to show
-        toast(throwable.localizedMessage)
+        toast(throwable)
+
+        if (!EspressoIdlingResource.idlingResource.isIdleNow) {
+            EspressoIdlingResource.decrementIdle()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -170,7 +176,7 @@ class DetailMatchActivity : AppCompatActivity(), DetailMatchView {
             }
 
             R.id.action_favorite -> {
-                if (this::listTeam.isInitialized) {
+                if (this::listTeam.isInitialized && this::urlBadgeHome.isInitialized && this::urlBadgeAway.isInitialized) {
                     if (isFavorite) removeFromFavorite()  else addToFavorite()
 
                     isFavorite = !isFavorite
@@ -202,8 +208,9 @@ class DetailMatchActivity : AppCompatActivity(), DetailMatchView {
                         FavoritesModel.AWAY_TEAM to strAwayTeam,
                         FavoritesModel.HOME_SCORE to intHomeScore,
                         FavoritesModel.AWAY_SCORE to intAwayScore,
-                        FavoritesModel.HOME_BAGDE to urlBadgeHome,
-                        FavoritesModel.AWAY_BADGE to urlBadgeAway
+                        FavoritesModel.HOME_BADGE to urlBadgeHome,
+                        FavoritesModel.AWAY_BADGE to urlBadgeAway,
+                        FavoritesModel.ID_LEAGUE to idLeague
                     )
                 }
                 rv_detail_match.snackbar("Added to favorite")

@@ -5,11 +5,14 @@ import com.dicoding.picodiploma.footballleagueaplication.models.lastMatchModel.L
 interface LastMatchView {
     fun showLoading()
     fun hideLoading()
-    fun loadLastMatch(
-        data: List<LastMatchItem>,
-        dataHome: MutableList<String>,
-        dataAway: MutableList<String>,
-        dataStadium: MutableList<String?>,
-        dataDate: Set<String>)
+
+    fun loadLastMatchData(
+        listLastMatch: List<LastMatchItem>,
+        listHomeBadge: List<String>,
+        listAwayBadge: List<String>,
+        listStadium: List<String?>,
+        setDate: Set<String>
+    )
+
     fun onFailure(throwable: String)
 }

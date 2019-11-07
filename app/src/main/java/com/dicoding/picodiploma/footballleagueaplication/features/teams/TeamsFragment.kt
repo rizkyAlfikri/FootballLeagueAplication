@@ -9,13 +9,18 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 
 import com.dicoding.picodiploma.footballleagueaplication.R
+import com.dicoding.picodiploma.footballleagueaplication.features.searchteams.SearchTeamsActivity
+import com.dicoding.picodiploma.footballleagueaplication.features.searchteams.SearchTeamsActivity.Companion.EXTRA_ID_LEAGUE
+import com.dicoding.picodiploma.footballleagueaplication.features.searchteams.SearchTeamsActivity.Companion.EXTRA_NAME_LEAGUE
 import com.dicoding.picodiploma.footballleagueaplication.features.teamDetail.TeamDetailActivity
 import com.dicoding.picodiploma.footballleagueaplication.features.teamDetail.TeamDetailActivity.Companion.EXTRA_LEAGUE
 import com.dicoding.picodiploma.footballleagueaplication.features.teamDetail.TeamDetailActivity.Companion.EXTRA_TEAM
-import com.dicoding.picodiploma.footballleagueaplication.networks.ApiRepository
+import com.dicoding.picodiploma.footballleagueaplication.models.teamModel.TeamResponse
+import com.dicoding.picodiploma.footballleagueaplication.repository.TeamRepository
+import com.dicoding.picodiploma.footballleagueaplication.utils.EspressoIdlingResource
 import com.dicoding.picodiploma.footballleagueaplication.utils.invisible
 import com.dicoding.picodiploma.footballleagueaplication.utils.visible
-import com.google.gson.Gson
+import com.dicoding.picodiploma.footballleagueaplication.viewHolder.TeamHolder
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.fragment_teams.*
@@ -27,11 +32,15 @@ class TeamsFragment : Fragment(), TeamView {
 
     private val teamAdapter = GroupAdapter<ViewHolder>()
     private var idLeague: String? = null
+    private var nameLeague: String? = null
+    private var teamPresenter: TeamPresenter? = null
+
     companion object {
-        fun newInstance(idLeague: String): TeamsFragment {
+        fun newInstance(idLeague: String, nameLeague: String): TeamsFragment {
             val fragment = TeamsFragment()
             fragment.arguments = Bundle().apply {
                 putString("id", idLeague)
+                putString("name", nameLeague )
             }
             return fragment
         }
@@ -47,7 +56,7 @@ class TeamsFragment : Fragment(), TeamView {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
+        nameLeague = arguments?.getString("name")
         idLeague = arguments?.getString("id")
 
         rv_team.apply {
@@ -55,9 +64,18 @@ class TeamsFragment : Fragment(), TeamView {
             adapter = teamAdapter
         }
 
-        val teamPresenter = TeamPresenter(this)
-        teamPresenter.getTeamData(idLeague)
 
+        EspressoIdlingResource.incrementIdle()
+
+        teamPresenter = TeamPresenter(this, TeamRepository())
+        teamPresenter?.getTeamData(idLeague)
+
+        img_search.setOnClickListener {
+            startActivity<SearchTeamsActivity>(
+                EXTRA_ID_LEAGUE to idLeague,
+                EXTRA_NAME_LEAGUE to nameLeague
+            )
+        }
     }
 
     override fun showLoading() {
@@ -69,22 +87,38 @@ class TeamsFragment : Fragment(), TeamView {
     }
 
     override fun loadDataToView(
-        listBadgeTeam: MutableList<String>,
-        listTeamName: MutableList<String>,
-        listIdTeam: MutableList<String>
+        teamResponse: TeamResponse
     ) {
 
-        for (position in listBadgeTeam.indices) {
-            teamAdapter.add(TeamHolder(listBadgeTeam[position], listTeamName[position]) {
-                startActivity<TeamDetailActivity>(EXTRA_TEAM to listIdTeam[position],
-                    EXTRA_LEAGUE to idLeague)
-            })
+        teamResponse.teams.map { teamItem ->
+            teamAdapter.add(
+                TeamHolder(
+                    teamItem.strTeamBadge,
+                    teamItem.strTeam
+                ) {
+                    startActivity<TeamDetailActivity>(
+                        EXTRA_TEAM to teamItem.idTeam,
+                        EXTRA_LEAGUE to idLeague
+                    )
+                })
         }
 
+        if (!EspressoIdlingResource.idlingResource.isIdleNow) {
+            EspressoIdlingResource.decrementIdle()
+        }
     }
 
-    override fun onFailure(throwable: Throwable?) {
-        toast("${throwable?.localizedMessage}")
+    override fun onFailure(throwable: String) {
+        toast(throwable)
+
+        if (!EspressoIdlingResource.idlingResource.isIdleNow) {
+            EspressoIdlingResource.decrementIdle()
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        teamPresenter = null
     }
 
 }

@@ -1,11 +1,11 @@
 package com.dicoding.picodiploma.footballleagueaplication.features.searchMatch
 
 import android.app.SearchManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.WindowManager
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.getSystemService
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,29 +13,47 @@ import com.dicoding.picodiploma.footballleagueaplication.R
 import com.dicoding.picodiploma.footballleagueaplication.features.detailMatch.DetailMatchActivity
 import com.dicoding.picodiploma.footballleagueaplication.features.detailMatch.DetailMatchActivity.Companion.EXTRA_EVENT
 import com.dicoding.picodiploma.footballleagueaplication.models.searchMatchModel.SearchMatchItem
-import com.dicoding.picodiploma.footballleagueaplication.networks.ApiRepository
+import com.dicoding.picodiploma.footballleagueaplication.repository.SearchMatchRepository
+import com.dicoding.picodiploma.footballleagueaplication.utils.EspressoIdlingResource
 import com.dicoding.picodiploma.footballleagueaplication.utils.invisible
 import com.dicoding.picodiploma.footballleagueaplication.utils.visible
-import com.google.gson.Gson
+import com.dicoding.picodiploma.footballleagueaplication.viewHolder.SearchMatchHolder
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.activity_search.*
+import kotlinx.android.synthetic.main.activity_search.progress_bar
+import kotlinx.android.synthetic.main.activity_search.rv_search
+import kotlinx.android.synthetic.main.activity_search.search_view
+import kotlinx.android.synthetic.main.activity_search.toolbar
+import kotlinx.android.synthetic.main.activity_search_teams.*
+import org.jetbrains.anko.longToast
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 
 class SearchMatchActivity : AppCompatActivity(), SearchMatchView {
 
-    private lateinit var searchPresenter: SearchMatchPresenter
+    private var searchPresenter: SearchMatchPresenter? = null
     private lateinit var queryData: String
     private val searchAdapter = GroupAdapter<ViewHolder>()
+    private var idLeague: String? = null
+    private var leagueName: String? = null
+    private var queryResult: String? = null
 
     companion object {
         const val EXTRA_SEARCH: String = "extraSearch"
+        const val EXTRA_LEAGUE: String = "extraId"
+        const val EXTRA_LEAGUE_NAME: String = "extraLeagueName"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
+
+
+        idLeague = intent.getStringExtra(EXTRA_LEAGUE)
+        leagueName = intent.getStringExtra(EXTRA_LEAGUE_NAME)
+
+        searchAdapter.clear()
 
         // make soft keyboard hide after used
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
@@ -44,10 +62,14 @@ class SearchMatchActivity : AppCompatActivity(), SearchMatchView {
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
         queryData = intent.getStringExtra(EXTRA_SEARCH)
-
+        toast(queryData)
         // initialize presenter and run method for fetch search match data
-        searchPresenter = SearchMatchPresenter(this, Gson(), ApiRepository())
-        searchPresenter.getSearchMatchData(queryData)
+        searchPresenter = SearchMatchPresenter(this, SearchMatchRepository(idLeague))
+
+        EspressoIdlingResource.incrementIdle()
+
+        searchPresenter?.getSearchMatchData(queryData)
+
 
         // initialize recycler view
         rv_search.apply {
@@ -64,17 +86,23 @@ class SearchMatchActivity : AppCompatActivity(), SearchMatchView {
         // initialize search view
         val searchManager = getSystemService<SearchManager>()
 
-        search_view.setSearchableInfo(searchManager?.getSearchableInfo(componentName))
-        search_view.setIconifiedByDefault(false)
-        search_view.setQuery(queryData, true)
-        search_view.isIconified = false
-        search_view.clearFocus()
+        search_view.apply {
+            setSearchableInfo(searchManager?.getSearchableInfo(componentName))
+            setIconifiedByDefault(false)
+            setQuery(queryData, true)
+            isIconified = false
+            clearFocus()
+        }
 
         search_view.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-
+                searchAdapter.clear()
+                toast("$query")
+                EspressoIdlingResource.incrementIdle()
                 // run method for get data search from server where query as parameter
-                searchPresenter.getSearchMatchData(query)
+                searchPresenter?.getSearchMatchData(query)
+                queryResult = query
+
                 return true
             }
 
@@ -105,21 +133,23 @@ class SearchMatchActivity : AppCompatActivity(), SearchMatchView {
         progress_bar.invisible()
     }
 
-    override fun loadDataToView(
-        data: MutableList<SearchMatchItem>,
+    override fun loadSearchDataToView(
+        dataSearch: List<SearchMatchItem>,
         dataHome: MutableList<String>,
         dataAway: MutableList<String>,
         dataStadium: MutableList<String?>
     ) {
 
-        // clear data in adapter when adapter will load new data
+        if (!EspressoIdlingResource.idlingResource.isIdleNow) {
+            EspressoIdlingResource.decrementIdle()
+        }
+
         searchAdapter.clear()
 
-        // load data to adapter
-        for (positions in data.indices) {
+        for (positions in dataSearch.indices) {
             searchAdapter.add(
                 SearchMatchHolder(
-                    data[positions],
+                    dataSearch[positions],
                     dataHome[positions],
                     dataAway[positions],
                     dataStadium[positions]
@@ -128,11 +158,22 @@ class SearchMatchActivity : AppCompatActivity(), SearchMatchView {
                 }
             )
         }
+
+        if (dataSearch.isEmpty()) longToast("Your search $queryResult match did not exits with $leagueName match")
+
     }
 
-    override fun onFailure(throwable: Throwable) {
+    override fun onFailure(throwable: String) {
         // error handling if data failure to display
-        toast(throwable.localizedMessage)
+        toast(throwable)
+
+        if (!EspressoIdlingResource.idlingResource.isIdleNow) {
+            EspressoIdlingResource.decrementIdle()
+        }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        searchPresenter = null
+    }
 }

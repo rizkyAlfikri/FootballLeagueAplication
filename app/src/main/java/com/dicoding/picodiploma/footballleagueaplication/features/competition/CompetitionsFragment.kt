@@ -12,7 +12,7 @@ import com.dicoding.picodiploma.footballleagueaplication.adapters.ui.main.Sectio
 import com.google.android.material.tabs.TabLayout
 
 
-class CompetitionsFragment: Fragment() {
+class CompetitionsFragment : Fragment() {
 
     companion object {
         fun newInstance(idLeague: String): CompetitionsFragment {
@@ -39,7 +39,8 @@ class CompetitionsFragment: Fragment() {
         val idLeague = arguments?.getString("id")
 
         // initialize view pager and adapter
-        val sectionsPagerAdapter = idLeague?.let { SectionsPagerAdapter(requireContext(), childFragmentManager, it) }
+        val sectionsPagerAdapter =
+            idLeague?.let { SectionsPagerAdapter(requireContext(), childFragmentManager, it) }
         val viewPager: ViewPager = view.findViewById(R.id.view_pager)
         viewPager.adapter = sectionsPagerAdapter
         val tabs: TabLayout = view.findViewById(R.id.tab_layout)

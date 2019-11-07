@@ -8,5 +8,5 @@ interface DetailMatchView {
     fun loadDataToView(listData: List<MatchDetailItem>)
     fun loadHomeBadgeToView(urlHomeBadge: String)
     fun loadAwayBadgeToView(urlAwayBadge: String)
-    fun onFailure(throwable: Throwable)
+    fun onFailure(throwable: String)
 }

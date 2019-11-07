@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="8dp"
+    android:elevation="8dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/img_team"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription"
+            tools:src="@drawable/english_premier_league" />
+
+        <TextView
+            android:id="@+id/txt_team"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/primary_text"
+            android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@+id/img_team"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Arsenal" />
+
+        <TextView
+            android:id="@+id/txt_league"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/primary_text"
+            android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@+id/img_team"
+            app:layout_constraintTop_toBottomOf="@+id/txt_team"
+            tools:text="English Premier League" />
+
+        <TextView
+            android:id="@+id/txt_win"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:textColor="@color/primary_text"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/bullet_win"
+            app:layout_constraintStart_toEndOf="@+id/bullet_win"
+            app:layout_constraintTop_toTopOf="@+id/bullet_win"
+            app:layout_constraintVertical_bias="0.55"
+            tools:text="10" />
+
+        <TextView
+            android:id="@+id/txt_draw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:textColor="@color/primary_text"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/bullet_draw"
+            app:layout_constraintStart_toEndOf="@+id/bullet_draw"
+            app:layout_constraintTop_toTopOf="@+id/bullet_draw"
+            app:layout_constraintVertical_bias="0.55"
+            tools:text="5" />
+
+        <TextView
+            android:id="@+id/txt_lose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:textColor="@color/primary_text"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/bullet_lost"
+            app:layout_constraintStart_toEndOf="@+id/bullet_lost"
+            app:layout_constraintTop_toTopOf="@+id/bullet_lost"
+            app:layout_constraintVertical_bias="0.55"
+            tools:text="0" />
+
+        <TextView
+            android:id="@+id/textView16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/won"
+            android:textColor="@color/primary_text"
+            android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@+id/img_team"
+            app:layout_constraintTop_toBottomOf="@+id/txt_league" />
+
+        <TextView
+            android:id="@+id/textView17"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/drawn"
+            android:textColor="@color/primary_text"
+            android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@+id/textView16"
+            app:layout_constraintTop_toBottomOf="@+id/txt_league" />
+
+        <TextView
+            android:id="@+id/textView15"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/lost"
+            android:textColor="@color/primary_text"
+            android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@+id/textView17"
+            app:layout_constraintTop_toBottomOf="@+id/txt_league" />
+
+        <TextView
+            android:id="@+id/bullet_win"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/bullet"
+            android:textColor="@android:color/holo_red_dark"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/textView16"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/textView16"
+            app:layout_constraintTop_toBottomOf="@+id/textView16" />
+
+        <TextView
+            android:id="@+id/bullet_draw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/bullet"
+            android:textColor="@color/secondary_text"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/textView17"
+            app:layout_constraintHorizontal_bias="0.3"
+            app:layout_constraintStart_toStartOf="@+id/textView17"
+            app:layout_constraintTop_toBottomOf="@+id/textView17" />
+
+        <TextView
+            android:id="@+id/bullet_lost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/bullet"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/textView15"
+            app:layout_constraintHorizontal_bias="0.1"
+            app:layout_constraintStart_toStartOf="@+id/textView15"
+            app:layout_constraintTop_toBottomOf="@+id/textView15" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

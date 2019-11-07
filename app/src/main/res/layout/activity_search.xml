@@ -36,10 +36,11 @@
                 android:background="@android:color/white"
                 android:clickable="true"
                 android:focusable="true"
+                app:queryHint="@string/search_match_league"
                 android:foreground="?android:attr/selectableItemBackground"
                 android:gravity="center_horizontal"
                 app:closeIcon="@drawable/ic_clear_black_24dp"
-                app:searchIcon="@null"
+                app:searchIcon="@drawable/search"
                 tools:ignore="UnusedAttribute" />
 
         </androidx.appcompat.widget.Toolbar>
